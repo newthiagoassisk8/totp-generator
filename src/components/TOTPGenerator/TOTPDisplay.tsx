@@ -1,63 +1,55 @@
-import React from 'react'
-import './TOTPDisplay.css'
+import React from 'react';
+import './TOTPDisplay.css';
 
 interface TOTPDisplayProps {
-  totp: string
-  timeRemaining: number
-  period: number
-  isValid: boolean
+    totp: string;
+    timeRemaining: number;
+    period: number;
+    isValid: boolean;
 }
 
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({
-  totp,
-  timeRemaining,
-  period,
-  isValid
-}) => {
-  const progressPercentage = ((period - timeRemaining) / period) * 100
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid }) => {
+    const progressPercentage = ((period - timeRemaining) / period) * 100;
 
-  if (!isValid) {
+    if (!isValid) {
+        return (
+            <div className="totp-display">
+                <div className="display-container">
+                    <h2>Generated TOTP</h2>
+                    <div className="totp-placeholder">
+                        <p>Enter a valid secret key to generate TOTP codes</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-      <div className="totp-display">
-        <div className="display-container">
-          <h2>Generated TOTP</h2>
-          <div className="totp-placeholder">
-            <p>Enter a valid secret key to generate TOTP codes</p>
-          </div>
+        <div className="totp-display">
+            <div className="display-container">
+                <h2>Generated TOTP</h2>
+
+                <div className="totp-code">
+                    <span className="code-text">{totp}</span>
+                </div>
+
+                <div className="timer-section">
+                    <div className="timer-display">
+                        <span className="time-remaining">{timeRemaining}s</span>
+                        <span className="time-label">remaining</span>
+                    </div>
+
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
+                    </div>
+                </div>
+
+                <div className="refresh-info">
+                    <p>Code refreshes automatically every {period} seconds</p>
+                </div>
+            </div>
         </div>
-      </div>
-    )
-  }
+    );
+};
 
-  return (
-    <div className="totp-display">
-      <div className="display-container">
-        <h2>Generated TOTP</h2>
-
-        <div className="totp-code">
-          <span className="code-text">{totp}</span>
-        </div>
-
-        <div className="timer-section">
-          <div className="timer-display">
-            <span className="time-remaining">{timeRemaining}s</span>
-            <span className="time-label">remaining</span>
-          </div>
-
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="refresh-info">
-          <p>Code refreshes automatically every {period} seconds</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default TOTPDisplay 
+export default TOTPDisplay;

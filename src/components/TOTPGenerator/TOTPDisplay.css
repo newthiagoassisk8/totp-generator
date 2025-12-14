@@ -1,128 +1,128 @@
 .totp-display {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 4px 20px var(--shadow-color);
-  border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
 }
 
 .display-container {
-  text-align: center;
+    text-align: center;
 }
 
 .display-container h2 {
-  margin: 0 0 24px 0;
-  color: var(--text-primary);
-  font-size: 24px;
-  font-weight: 600;
+    margin: 0 0 24px 0;
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 600;
 }
 
 .totp-placeholder {
-  padding: 60px 20px;
-  color: var(--text-muted);
-  font-size: 16px;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 16px;
 }
 
 .totp-code {
-  margin: 32px 0;
-  padding: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    margin: 32px 0;
+    padding: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
 }
 
 .code-text {
-  font-family: 'Courier New', monospace;
-  font-size: 48px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-family: 'Courier New', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .timer-section {
-  margin: 32px 0;
+    margin: 32px 0;
 }
 
 .timer-display {
-  margin-bottom: 16px;
+    margin-bottom: 16px;
 }
 
 .time-remaining {
-  display: block;
-  font-size: 36px;
-  font-weight: 700;
-  color: #ef4444;
-  font-family: 'Courier New', monospace;
+    display: block;
+    font-size: 36px;
+    font-weight: 700;
+    color: #ef4444;
+    font-family: 'Courier New', monospace;
 }
 
 .time-label {
-  display: block;
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 4px;
+    display: block;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
 }
 
 .progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 16px 0;
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 16px 0;
 }
 
 /* Dark mode styles */
-[data-theme="dark"] .progress-bar {
-  background: #374151;
+[data-theme='dark'] .progress-bar {
+    background: #374151;
 }
 
 .progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #3b82f6);
-  border-radius: 4px;
-  transition: width 1s linear;
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #3b82f6);
+    border-radius: 4px;
+    transition: width 1s linear;
 }
 
 .refresh-info {
-  margin-top: 24px;
-  padding: 16px;
-  background: var(--bg-primary);
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-size: 14px;
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
 }
 
 @media (max-width: 768px) {
-  .totp-display {
-    padding: 24px;
-  }
-  
-  .code-text {
-    font-size: 36px;
-    letter-spacing: 6px;
-  }
-  
-  .time-remaining {
-    font-size: 28px;
-  }
+    .totp-display {
+        padding: 24px;
+    }
+
+    .code-text {
+        font-size: 36px;
+        letter-spacing: 6px;
+    }
+
+    .time-remaining {
+        font-size: 28px;
+    }
 }
 
 @media (max-width: 480px) {
-  .totp-display {
-    padding: 20px;
-  }
-  
-  .display-container h2 {
-    font-size: 20px;
-  }
-  
-  .code-text {
-    font-size: 28px;
-    letter-spacing: 4px;
-  }
-  
-  .time-remaining {
-    font-size: 24px;
-  }
-} 
+    .totp-display {
+        padding: 20px;
+    }
+
+    .display-container h2 {
+        font-size: 20px;
+    }
+
+    .code-text {
+        font-size: 28px;
+        letter-spacing: 4px;
+    }
+
+    .time-remaining {
+        font-size: 24px;
+    }
+}
