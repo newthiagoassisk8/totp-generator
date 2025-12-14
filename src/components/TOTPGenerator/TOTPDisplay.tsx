@@ -8,11 +8,11 @@ interface TOTPDisplayProps {
   isValid: boolean
 }
 
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ 
-  totp, 
-  timeRemaining, 
-  period, 
-  isValid 
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({
+  totp,
+  timeRemaining,
+  period,
+  isValid
 }) => {
   const progressPercentage = ((period - timeRemaining) / period) * 100
 
@@ -33,7 +33,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({
     <div className="totp-display">
       <div className="display-container">
         <h2>Generated TOTP</h2>
-        
+
         <div className="totp-code">
           <span className="code-text">{totp}</span>
         </div>
@@ -43,9 +43,9 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({
             <span className="time-remaining">{timeRemaining}s</span>
             <span className="time-label">remaining</span>
           </div>
-          
+
           <div className="progress-bar">
-            <div 
+            <div
               className="progress-fill"
               style={{ width: `${progressPercentage}%` }}
             />

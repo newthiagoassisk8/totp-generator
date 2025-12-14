@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import TOTPForm from './TOTPForm'
 import TOTPDisplay from './TOTPDisplay'
 import { TOTPConfig } from '../../types/TOTPTypes'
 import { generateTOTP, testTOTPGeneration } from '../../utils/totpUtils'
@@ -12,7 +11,7 @@ const TOTPGenerator: React.FC = () => {
     period: 30,
     algorithm: 'sha1'
   })
-  
+
   const [currentTOTP, setCurrentTOTP] = useState<string>('')
   const [timeRemaining, setTimeRemaining] = useState<number>(30)
   const [isValid, setIsValid] = useState<boolean>(false)
@@ -87,15 +86,12 @@ const TOTPGenerator: React.FC = () => {
   return (
     <div className="totp-generator">
       <div className="generator-container">
-        <TOTPForm 
-          config={config} 
-          onConfigChange={handleConfigChange}
-        />
-        <TOTPDisplay 
+
+        <TOTPDisplay
           totp={currentTOTP}
           timeRemaining={timeRemaining}
           period={config.period}
-          isValid={isValid}
+          isValid={true}
         />
       </div>
     </div>
