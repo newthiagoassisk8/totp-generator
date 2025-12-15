@@ -1,7 +1,7 @@
 const API_URL = 'http://192.168.0.27:3000/api';
 
 export async function getTotp() {
-    const baseUrl = `${API_URL}/totp`;
+    const baseUrl = `${API_URL}/totp?uid=item1`;
     try {
         const res = await fetch(`${baseUrl}`);
 

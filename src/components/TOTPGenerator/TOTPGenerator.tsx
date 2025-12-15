@@ -1,39 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import TOTPDisplay from './TOTPDisplay';
 import { TOTPConfig } from '../../types/TOTPTypes';
-import { generateTOTP, testTOTPGeneration } from '../../utils/totpUtils';
+import { generateTOTP } from '../../utils/totpUtils';
 import './TOTPGenerator.css';
-
+import { useTotp } from '../../hooks/useTotpFetching';
+import { getTotp } from '../../integrations/api';
+//TODO: Criar custom hook que exporta estados que seram renderizados na tela junto com os calculos que virão da API
 const TOTPGenerator: React.FC = () => {
+    const [isValid, setIsValid] = useState<boolean>(true);
+    const { expiresDate, currentTOTP, reload, error } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
+    let now = new Date().getTime();
+    const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
+
     const [config, setConfig] = useState<TOTPConfig>({
-        secret: '',
-        digits: 6,
-        period: 30,
+        secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        digits: 1,
         algorithm: 'sha1',
+        period: 30,
     });
-
-    const [currentTOTP, setCurrentTOTP] = useState<string>('');
-    const [timeRemaining, setTimeRemaining] = useState<number>(30);
-    const [isValid, setIsValid] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (!config.secret || config.secret.trim() === '') {
-            setIsValid(false);
-            setCurrentTOTP('');
-            return;
-        }
-
-        try {
-            const totp = generateTOTP(config);
-            console.log('Generated TOTP:', totp, 'for config:', config); // Debug log
-            setCurrentTOTP(totp);
-            setIsValid(true);
-        } catch (error) {
-            console.error('TOTP generation error:', error); // Debug log
-            setIsValid(false);
-            setCurrentTOTP('');
-        }
-    }, [config]);
 
     useEffect(() => {
         if (!isValid) return;
@@ -44,8 +28,9 @@ const TOTPGenerator: React.FC = () => {
                     // Regenerate TOTP when timer resets
                     try {
                         const totp = generateTOTP(config);
+                        reload();
                         console.log('Timer reset - New TOTP:', totp); // Debug log
-                        setCurrentTOTP(totp);
+
                         return config.period;
                     } catch (error) {
                         console.error('Timer reset TOTP error:', error); // Debug log
@@ -58,35 +43,19 @@ const TOTPGenerator: React.FC = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [isValid, config.period, config]);
-
-    const handleConfigChange = (newConfig: TOTPConfig) => {
-        setConfig(newConfig);
-        setTimeRemaining(newConfig.period);
-    };
-
-    const handleTestTOTP = () => {
-        try {
-            const testTOTP = testTOTPGeneration();
-            console.log('Test TOTP result:', testTOTP);
-            // Set a test config to see if it works
-            const testConfig = {
-                secret: 'JBSWY3DPEHPK3PXP',
-                digits: 6,
-                period: 30,
-                algorithm: 'sha1' as const,
-            };
-            setConfig(testConfig);
-            setTimeRemaining(30);
-        } catch (error) {
-            console.error('Test failed:', error);
-        }
-    };
+    }, [isValid, 30, config]);
 
     return (
         <div className="totp-generator">
             <div className="generator-container">
-                <TOTPDisplay totp={currentTOTP} timeRemaining={timeRemaining} period={config.period} isValid={true} />
+                <p>{error}</p>
+                <TOTPDisplay
+                    totp={currentTOTP}
+                    timeRemaining={timeRemaining}
+                    period={30}
+                    isValid={!false}
+                    error={error?.toString()}
+                />
             </div>
         </div>
     );

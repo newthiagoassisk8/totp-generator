@@ -1,15 +1,28 @@
 import React from 'react';
 import './TOTPDisplay.css';
-
 interface TOTPDisplayProps {
     totp: string;
     timeRemaining: number;
     period: number;
     isValid: boolean;
+    error: string | undefined;
 }
 
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid }) => {
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid, error }) => {
     const progressPercentage = ((period - timeRemaining) / period) * 100;
+
+    if (error) {
+        return (
+            <div className="totp-display">
+                <div className="display-container">
+                    <h2>Generated TOTP</h2>
+                    <div className="totp-placeholder">
+                        <p>{error}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!isValid) {
         return (
