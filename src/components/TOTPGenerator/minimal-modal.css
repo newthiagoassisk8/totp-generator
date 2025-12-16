@@ -1,0 +1,12 @@
+.modal {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.modal.show {
+  opacity: 1;
+}
+
+.modal.hide {
+  opacity: 0;
+}

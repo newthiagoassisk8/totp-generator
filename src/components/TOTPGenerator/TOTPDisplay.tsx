@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './TOTPDisplay.css';
+
+import { MinimalModal } from './MinimalModal';
 interface TOTPDisplayProps {
     totp: string;
     timeRemaining: number;
@@ -10,6 +12,15 @@ interface TOTPDisplayProps {
 
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid, error }) => {
     const progressPercentage = ((period - timeRemaining) / period) * 100;
+    const [showModal, setShowModal] = useState(false);
+
+    function handleClipBoard(texto: string) {
+        setShowModal(true)
+        navigator.clipboard.writeText(texto)
+
+    }
+
+
 
     if (error) {
         return (
@@ -22,7 +33,9 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
                 </div>
             </div>
         );
+
     }
+
 
     if (!isValid) {
         return (
@@ -43,7 +56,13 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
                 <h2>Generated TOTP</h2>
 
                 <div className="totp-code">
-                    <span className="code-text">{totp}</span>
+                    <span className="code-text" onClick={() => handleClipBoard(totp)}>{totp}</span>
+                    {showModal &&
+                        <MinimalModal
+                            isShown={showModal}
+                            text="Código TOTP copiado para o clipboard."
+                            onClose={() => setShowModal(false)}
+                        />}
                 </div>
 
                 <div className="timer-section">
