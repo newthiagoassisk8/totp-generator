@@ -10,6 +10,7 @@ interface useTotpParams {
  */
 export interface UseTotpReturn {
     expiresDate: number;
+    now: number;
     currentTOTP: string;
     isChecking: boolean;
     error: string | null;
@@ -28,6 +29,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [expiresDate, setExpiresDate] = useState<number>(30);
 
+    const [currentTime, setCurrentTime] = useState<number>(Date.now());
     const fetchApi = useCallback(async (): Promise<void> => {
         if (!secret) {
             setIsChecking(false);
@@ -38,6 +40,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
             const result = await getTotp();
             setCurrentTOTP(result.otp);
             setExpiresDate(result?.expiresDate);
+            setCurrentTime(result?.now)
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
@@ -64,6 +67,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         expiresDate,
         error,
         isChecking,
+        now: currentTime,
         reload: fetchApi,
     };
 }
