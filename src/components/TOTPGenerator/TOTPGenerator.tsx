@@ -4,14 +4,21 @@ import { TOTPConfig } from '../../types/TOTPTypes';
 import { generateTOTP } from '../../utils/totpUtils';
 import './TOTPGenerator.css';
 import { useTotp } from '../../hooks/useTotpFetching';
+import TOTPForm from './TOTPForm';
 const TOTPGenerator: React.FC = () => {
 
+    // TODO: Criar botão e colocar o formulário de cadastro de secret
+    // TODO: Colocar copiar código
     const [isValid, setIsValid] = useState<boolean>(true);
-    const { expiresDate, now, currentTOTP, reload, error } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' })
+    const [showForm, setShowForm] = useState<boolean>(false)
+    const { expiresDate, now, currentTOTP, reload, error } = useTotp({ secret: undefined })
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
 
     const [config, setConfig] = useState<TOTPConfig>({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', digits: 1, algorithm: 'sha1', period: 30 });
-
+    const handleConfigChange = (newConfig: TOTPConfig) => {
+        setConfig(newConfig)
+        setTimeRemaining(newConfig.period)
+    }
     useEffect(() => {
         if (!isValid) return;
 
@@ -42,7 +49,11 @@ const TOTPGenerator: React.FC = () => {
     return (
         <div className="totp-generator">
             <div className="generator-container">
-                <TOTPDisplay totp={currentTOTP} timeRemaining={timeRemaining} period={30} isValid={!false} error={error?.toString()} />
+                {showForm ? <TOTPForm
+                    config={config}
+                    onConfigChange={() => handleConfigChange}
+                /> :
+                    <TOTPDisplay totp={currentTOTP} timeRemaining={timeRemaining} period={30} isValid={!false} error={error?.toString()} />}
             </div>
         </div>
     );

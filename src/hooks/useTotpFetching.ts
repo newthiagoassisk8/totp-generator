@@ -12,29 +12,24 @@ export interface UseTotpReturn {
     expiresDate: number;
     now: number;
     currentTOTP: string;
-    isChecking: boolean;
     error: string | null;
     reload: () => Promise<void>;
 }
 
 /**
+ * currentTotp, now e expireDate precisa ser checado antes de exportar
  *
+ * Secret é o parametro que estou madando para a API
+ * currentTotp, now e expireDate é o retorno da requisição
  *
  */
+// TODO: exportar estado de carrgamento para quando der refresh na página um componente de loading ser carregado
 export function useTotp({ secret }: useTotpParams): UseTotpReturn {
-    const [isChecking, setIsChecking] = useState(() => {
-        return Boolean(secret);
-    });
     const [error, setError] = useState<string | null>(null);
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [expiresDate, setExpiresDate] = useState<number>(30);
-
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
     const fetchApi = useCallback(async (): Promise<void> => {
-        if (!secret) {
-            setIsChecking(false);
-        }
-        setIsChecking(true);
         setError(null);
         try {
             const result = await getTotp();
@@ -44,7 +39,6 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
-            setIsChecking(false);
         }
     }, [secret]);
 
@@ -59,14 +53,12 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
 
             return () => clearTimeout(timer);
         }
-        setIsChecking(false);
     }, [secret, fetchApi]);
 
     return {
         currentTOTP,
         expiresDate,
         error,
-        isChecking,
         now: currentTime,
         reload: fetchApi,
     };

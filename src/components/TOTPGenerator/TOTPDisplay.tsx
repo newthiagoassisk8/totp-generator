@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './TOTPDisplay.css';
+import './button.css';
 
 import { MinimalModal } from './MinimalModal';
 interface TOTPDisplayProps {
@@ -10,10 +11,29 @@ interface TOTPDisplayProps {
     error: string | undefined;
 }
 
+type EditButtonProps = {
+    isEditing?: boolean
+    onToggle?: () => void
+}
+
+
+export function EditButton({ isEditing, onToggle }: EditButtonProps) {
+    return (
+        <button
+            className="edit-button"
+            type="button"
+            onClick={onToggle}
+            aria-pressed={isEditing}
+            aria-label={isEditing ? "Sair do modo de edição" : "Entrar no modo de edição"}
+            title={isEditing ? "Sair do modo de edição" : "Editar"}
+        >
+            <span className="edit-label">{isEditing ? "Editing" : "Edit"}</span>
+        </button>
+    )
+}
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid, error }) => {
     const progressPercentage = ((period - timeRemaining) / period) * 100;
     const [showModal, setShowModal] = useState(false);
-
     function handleClipBoard(texto: string) {
         setShowModal(true)
         navigator.clipboard.writeText(texto)
@@ -56,7 +76,8 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
                 <h2>Generated TOTP</h2>
 
                 <div className="totp-code">
-                    <span className="code-text" onClick={() => handleClipBoard(totp)}>{totp}</span>
+                    <span className="code-text" onClick={() => handleClipBoard(totp)}>{totp ? totp : 'não disponivel'}</span>
+
                     {showModal &&
                         <MinimalModal
                             isShown={showModal}
@@ -75,6 +96,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
                         <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                     </div>
                 </div>
+                <EditButton isEditing={true} onToggle={() => console.log('')} />
 
                 <div className="refresh-info">
                     <p>Code refreshes automatically every {period} seconds</p>
