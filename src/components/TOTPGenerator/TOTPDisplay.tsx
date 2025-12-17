@@ -3,6 +3,7 @@ import './TOTPDisplay.css';
 import './button.css';
 
 import { MinimalModal } from './MinimalModal';
+import { useTotp } from '../../hooks/useTotpFetching';
 interface TOTPDisplayProps {
     totp: string;
     timeRemaining: number;
@@ -16,7 +17,7 @@ type EditButtonProps = {
     onToggle?: () => void
 }
 
-
+//TODO: Remover isEditing daqui, não faz sentido
 export function EditButton({ isEditing, onToggle }: EditButtonProps) {
     return (
         <button
@@ -34,6 +35,8 @@ export function EditButton({ isEditing, onToggle }: EditButtonProps) {
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid, error }) => {
     const progressPercentage = ((period - timeRemaining) / period) * 100;
     const [showModal, setShowModal] = useState(false);
+    const { isLoading: isLoadingHook } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' })
+
     function handleClipBoard(texto: string) {
         setShowModal(true)
         navigator.clipboard.writeText(texto)
@@ -76,8 +79,10 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
                 <h2>Generated TOTP</h2>
 
                 <div className="totp-code">
-                    <span className="code-text" onClick={() => handleClipBoard(totp)}>{totp ? totp : 'não disponivel'}</span>
-
+                    {
+                        !isLoadingHook ?
+                            <span className="code-text" onClick={() => handleClipBoard(totp)}>{totp ? totp : 'não disponivel'}</span> : <p>Carregando</p>
+                    }
                     {showModal &&
                         <MinimalModal
                             isShown={showModal}

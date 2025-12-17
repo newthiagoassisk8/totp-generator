@@ -14,6 +14,7 @@ export interface UseTotpReturn {
     currentTOTP: string;
     error: string | null;
     reload: () => Promise<void>;
+    isLoading: boolean
 }
 
 /**
@@ -23,14 +24,15 @@ export interface UseTotpReturn {
  * currentTotp, now e expireDate é o retorno da requisição
  *
  */
-// TODO: exportar estado de carrgamento para quando der refresh na página um componente de loading ser carregado
 export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [expiresDate, setExpiresDate] = useState<number>(30);
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
     const fetchApi = useCallback(async (): Promise<void> => {
         setError(null);
+        setIsLoading(true)
         try {
             const result = await getTotp();
             setCurrentTOTP(result.otp);
@@ -39,6 +41,8 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
+            console.log('caiu aqui???')
+            setIsLoading(false)
         }
     }, [secret]);
 
@@ -61,5 +65,6 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         error,
         now: currentTime,
         reload: fetchApi,
+        isLoading
     };
 }
