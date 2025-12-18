@@ -1,13 +1,16 @@
 import React from 'react'
 import { TOTPConfig } from '../../types/TOTPTypes'
 import './TOTPForm.css'
+import { EditButton } from './TOTPDisplay'
 
 interface TOTPFormProps {
   config: TOTPConfig
   onConfigChange: (config: TOTPConfig) => void
+  onToggleEdit: () => void;
+
 }
 
-const TOTPForm: React.FC<TOTPFormProps> = ({ config, onConfigChange }) => {
+const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange }) => {
   const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
     onConfigChange({
       ...config,
@@ -26,7 +29,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onConfigChange }) => {
       <h2>Configuration</h2>
       <form onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
-          <label htmlFor="secret">Secret Key (Base32)</label>
+          <label htmlFor="secret">Emissor</label>
           <input
             type="text"
             id="secret"
@@ -42,7 +45,8 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onConfigChange }) => {
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="digits">Digits</label>
+            <label htmlFor="digits">Emissor</label>
+
             <select
               id="digits"
               value={config.digits}
@@ -54,34 +58,26 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onConfigChange }) => {
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="period">Period (seconds)</label>
-            <select
-              id="period"
-              value={config.period}
-              onChange={(e) => handleInputChange('period', parseInt(e.target.value))}
-              className="form-select"
-            >
-              <option value={30}>30 seconds</option>
-              <option value={60}>60 seconds</option>
-            </select>
-          </div>
-        </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="digits">Conta</label>
 
-        <div className="form-group">
-          <label htmlFor="algorithm">Algorithm</label>
-          <select
-            id="algorithm"
-            value={config.algorithm}
-            onChange={(e) => handleInputChange('algorithm', e.target.value)}
-            className="form-select"
-          >
-            <option value="sha1">sha1</option>
-            <option value="sha256">sha256</option>
-            <option value="sha512">sha512</option>
-          </select>
+              <input
+                type="text"
+                id="secret"
+                value={config.secret}
+                onChange={(e) => handleSecretChange(e.target.value)}
+                placeholder="Enter your base32 secret key"
+                className="form-input"
+              />
+
+            </div>
+          </div>
+
         </div>
+        <EditButton isEditing={false} onToggle={onToggleEdit} />
       </form>
+
     </div>
   )
 }

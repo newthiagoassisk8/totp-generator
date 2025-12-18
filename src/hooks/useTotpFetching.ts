@@ -11,10 +11,12 @@ interface useTotpParams {
 export interface UseTotpReturn {
     expiresDate: number;
     now: number;
+    showForm: boolean;
     currentTOTP: string;
     error: string | null;
     reload: () => Promise<void>;
-    isLoading: boolean
+    isLoading: boolean;
+    toggleShowForm: () => void
 }
 
 /**
@@ -28,8 +30,16 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [currentTOTP, setCurrentTOTP] = useState('');
+    const [showForm, setShowForm] = useState(false);
     const [expiresDate, setExpiresDate] = useState<number>(30);
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
+    function toggleShowForm() {
+        setShowForm(prev => !prev)
+    }
+
+
+
+
     const fetchApi = useCallback(async (): Promise<void> => {
         setError(null);
         setIsLoading(true)
@@ -65,6 +75,8 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         error,
         now: currentTime,
         reload: fetchApi,
-        isLoading
+        isLoading,
+        showForm,
+        toggleShowForm
     };
 }

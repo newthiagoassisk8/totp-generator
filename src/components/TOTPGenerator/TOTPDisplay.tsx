@@ -8,41 +8,43 @@ interface TOTPDisplayProps {
     totp: string;
     timeRemaining: number;
     period: number;
+    onToggleEdit: () => void;
     isValid: boolean;
     error: string | undefined;
 }
 
 type EditButtonProps = {
-    isEditing?: boolean
+    canEdit?: boolean
     onToggle?: () => void
 }
 
-//TODO: Remover isEditing daqui, não faz sentido
-export function EditButton({ isEditing, onToggle }: EditButtonProps) {
+export function EditButton({ canEdit, onToggle }: EditButtonProps) {
     return (
         <button
             className="edit-button"
             type="button"
             onClick={onToggle}
-            aria-pressed={isEditing}
-            aria-label={isEditing ? "Sair do modo de edição" : "Entrar no modo de edição"}
-            title={isEditing ? "Sair do modo de edição" : "Editar"}
+            aria-pressed={canEdit}
+            aria-label={canEdit ? "Sair do modo de edição" : "Entrar no modo de edição"}
+            title={canEdit ? "Sair do modo de edição" : "Editar"}
         >
-            <span className="edit-label">{isEditing ? "Editing" : "Edit"}</span>
+            <span className="edit-label">{canEdit ? "Editar" : "Voltar"}</span>
         </button>
     )
 }
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, isValid, error }) => {
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, onToggleEdit, timeRemaining, period, isValid, error }) => {
     const progressPercentage = ((period - timeRemaining) / period) * 100;
     const [showModal, setShowModal] = useState(false);
-    const { isLoading: isLoadingHook } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' })
+    const { isLoading: isLoadingHook, toggleShowForm } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' })
+
+
+
 
     function handleClipBoard(texto: string) {
         setShowModal(true)
         navigator.clipboard.writeText(texto)
 
     }
-
 
 
     if (error) {
@@ -73,6 +75,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
         );
     }
 
+
     return (
         <div className="totp-display">
             <div className="display-container">
@@ -101,7 +104,8 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ totp, timeRemaining, period, 
                         <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                     </div>
                 </div>
-                <EditButton isEditing={true} onToggle={() => console.log('')} />
+
+                <EditButton canEdit={true} onToggle={onToggleEdit} />
 
                 <div className="refresh-info">
                     <p>Code refreshes automatically every {period} seconds</p>
