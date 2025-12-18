@@ -51,7 +51,6 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
-            console.log('caiu aqui???')
             setIsLoading(false)
         }
     }, [secret]);

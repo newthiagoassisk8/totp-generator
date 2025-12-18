@@ -9,7 +9,19 @@ interface TOTPFormProps {
   onToggleEdit: () => void;
 
 }
-
+// TODO: ajustar depois a classe desse botão
+function SaveButton() {
+  return (
+    <button
+      className="save-button"
+      type="button"
+      onClick={() => { }}
+      title="Salvar"
+    >
+      <span className="edit-label">Salvar</span>
+    </button>
+  )
+}
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange }) => {
   const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
     onConfigChange({
@@ -19,7 +31,6 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
   }
 
   const handleSecretChange = (value: string) => {
-    // Remove spaces and convert to uppercase for base32
     const cleanedSecret = value.replace(/\s/g, '').toUpperCase()
     handleInputChange('secret', cleanedSecret)
   }
@@ -75,7 +86,9 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
           </div>
 
         </div>
-        <EditButton isEditing={false} onToggle={onToggleEdit} />
+        <EditButton canEdit={false} onToggle={onToggleEdit} />
+
+        <SaveButton />
       </form>
 
     </div>
