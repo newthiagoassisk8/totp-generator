@@ -1,14 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTotp } from '../integrations/api';
 
+
 interface useTotpParams {
     secret?: string;
+}
+
+type TOTPItem = {
+    uid: string
+    label?: string
+    otp: string
+    timeRemaining: number
+    period: number
+    error?: string
+    isValid?: boolean
 }
 
 /**
  * Retorno do hook
  */
 export interface UseTotpReturn {
+
     expiresDate: number;
     now: number;
     showForm: boolean;
@@ -17,6 +29,7 @@ export interface UseTotpReturn {
     reload: () => Promise<void>;
     isLoading: boolean;
     toggleShowForm: () => void
+    items: TOTPItem[];
 }
 
 /**
@@ -31,6 +44,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [showForm, setShowForm] = useState(false);
+    const [items, setItems] = useState<TOTPItem[]>([])
     const [expiresDate, setExpiresDate] = useState<number>(30);
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
     function toggleShowForm() {
@@ -45,8 +59,9 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         setIsLoading(true)
         try {
             const result = await getTotp();
+            setItems(result)
+
             setCurrentTOTP(result.otp);
-            setExpiresDate(result?.expiresDate);
             setCurrentTime(result?.now)
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
@@ -76,6 +91,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         reload: fetchApi,
         isLoading,
         showForm,
-        toggleShowForm
+        toggleShowForm,
+        items
     };
 }

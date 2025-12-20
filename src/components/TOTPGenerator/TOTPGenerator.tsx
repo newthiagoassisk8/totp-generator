@@ -6,23 +6,32 @@ import './TOTPGenerator.css';
 import { useTotp } from '../../hooks/useTotpFetching';
 import TOTPForm from './TOTPForm';
 const TOTPGenerator: React.FC = () => {
-
+    // TODO: Fazer o componetne ter mais de um visualizador de TOTP
     // TODO: Criar botão e colocar o formulário de cadastro de secret
-    const [isValid, setIsValid] = useState<boolean>(true);
-    const { expiresDate, now, currentTOTP, reload, error, toggleShowForm, showForm } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' })
+    const { expiresDate, now, items: apiItems, reload, error, toggleShowForm, showForm } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' })
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
     const [config, setConfig] = useState<TOTPConfig>({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', digits: 1, algorithm: 'sha1', period: 30 });
+    const itemsAsdf = apiItems.map(item => {
+        return {
+            uid: item.uid,
+            label: item.label ?? item.uid,
+            totp: item.otp,
+            timeRemaining,
+            period: config.period,
+            error: error?.toString(),
+        }
+    })
+
     const handleConfigChange = (newConfig: TOTPConfig) => {
         setConfig(newConfig)
         setTimeRemaining(newConfig.period)
     }
+
     useEffect(() => {
-        if (!isValid) return;
 
         const timer = setInterval(() => {
             setTimeRemaining((prev) => {
                 if (prev <= 1) {
-                    // Regenerate TOTP when timer resets
                     try {
                         const totp = generateTOTP(config);
                         reload()
@@ -31,7 +40,6 @@ const TOTPGenerator: React.FC = () => {
                         return config.period;
                     } catch (error) {
                         console.error('Timer reset TOTP error:', error); // Debug log
-                        setIsValid(false);
                         return config.period;
                     }
                 }
@@ -40,7 +48,7 @@ const TOTPGenerator: React.FC = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [isValid, 30, config]);
+    }, [30, config]);
 
 
 
@@ -53,12 +61,8 @@ const TOTPGenerator: React.FC = () => {
                     onConfigChange={() => handleConfigChange}
                 /> :
                     <TOTPDisplay
+                        items={itemsAsdf}
                         onToggleEdit={toggleShowForm}
-                        totp={currentTOTP}
-                        timeRemaining={timeRemaining}
-                        period={config.period}
-                        isValid={isValid}
-                        error={error?.toString()}
                     />}
 
 

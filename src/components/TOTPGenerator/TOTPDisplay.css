@@ -22,7 +22,14 @@
     color: var(--text-muted);
     font-size: 16px;
 }
-
+.totp-card {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 22px;
+  margin: 14px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
 .totp-code {
     margin: 32px 0;
     padding: 24px;
