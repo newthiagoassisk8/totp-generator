@@ -9,7 +9,7 @@ interface TOTPFormProps {
   onToggleEdit: () => void;
 
 }
-// TODO: Ajustar formulário e cadatrar um novo serviço
+// TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
 function SaveButton() {
   return (
     <button
@@ -55,23 +55,22 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
         </div>
 
         <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="digits">Emissor</label>
 
-            <select
-              id="digits"
-              value={config.digits}
-              onChange={(e) => handleInputChange('digits', parseInt(e.target.value))}
-              className="form-select"
-            >
-              <option value={6}>6 digits</option>
-              <option value={8}>8 digits</option>
-            </select>
-          </div>
+          <label htmlFor="secret">Chave Secreta</label>
 
+          <input
+            type="text"
+            id="secret"
+            value={config.secret}
+            onChange={(e) => handleSecretChange(e.target.value)}
+            placeholder="Enter your base32 secret key"
+            className="form-input"
+          />
+          <div />
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="digits">Conta</label>
+
 
               <input
                 type="text"

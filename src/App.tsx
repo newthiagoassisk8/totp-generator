@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import TOTPGenerator from './components/TOTPGenerator/TOTPGenerator';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
