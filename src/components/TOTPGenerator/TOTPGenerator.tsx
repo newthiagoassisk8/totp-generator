@@ -15,7 +15,7 @@ const TOTPGenerator: React.FC = () => {
         return {
             uid: item.uid,
             label: item.label ?? item.uid,
-            totp: item.otp,
+            otp: item.otp,
             timeRemaining,
             period: config.period,
             error: error?.toString(),
@@ -52,7 +52,7 @@ const TOTPGenerator: React.FC = () => {
 
 
 
-    return (
+   return (
         <div className="totp-generator">
             <div className="generator-container">
                 {showForm ? <TOTPForm

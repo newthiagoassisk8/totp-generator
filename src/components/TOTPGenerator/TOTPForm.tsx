@@ -9,7 +9,7 @@ interface TOTPFormProps {
   onToggleEdit: () => void;
 
 }
-// TODO: ajustar depois a classe desse botão
+// TODO: Ajustar formulário e cadatrar um novo serviço
 function SaveButton() {
   return (
     <button
@@ -37,7 +37,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
 
   return (
     <div className="totp-form">
-      <h2>Configuration</h2>
+      <h2>Inserir detalhes da conta</h2>
       <form onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
           <label htmlFor="secret">Emissor</label>

@@ -13,6 +13,7 @@ type TOTPItem = {
     timeRemaining: number
     period: number
     error?: string
+    otp: string
     isValid?: boolean
 }
 
@@ -47,9 +48,9 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
 
     const [modalForUid, setModalForUid] = useState<string | null>(null)
 
-    function handleClipBoard(uid: string, texto: string) {
+    function handleClipBoard(uid: string, totp: string) {
         setModalForUid(uid)
-        navigator.clipboard.writeText(texto)
+        navigator.clipboard.writeText(totp)
     }
 
     if (!items || items.length === 0) {
@@ -97,11 +98,11 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                     {!isLoadingHook ? (
                                         <span
                                             className="code-text"
-                                            onClick={() => handleClipBoard(item.uid, item.totp)}
+                                            onClick={() => handleClipBoard(item.uid, item.otp)}
                                             role="button"
                                             tabIndex={0}
                                         >
-                                            {item.totp ? item.totp : 'não disponível'}
+                                            {item.otp ? item.otp : 'não disponível'}
                                         </span>
                                     ) : (
                                         <p>Carregando</p>
