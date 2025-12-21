@@ -55,33 +55,17 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
         </div>
 
         <div className="form-row">
-
-          <label htmlFor="secret">Chave Secreta</label>
-
-          <input
-            type="text"
-            id="secret"
-            value={config.secret}
-            onChange={(e) => handleSecretChange(e.target.value)}
-            placeholder="Enter your base32 secret key"
-            className="form-input"
-          />
-          <div />
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="digits">Conta</label>
-
-
-              <input
-                type="text"
-                id="secret"
-                value={config.secret}
-                onChange={(e) => handleSecretChange(e.target.value)}
-                placeholder="Enter your base32 secret key"
-                className="form-input"
-              />
-
-            </div>
+          <div className="form-group">
+            <label htmlFor="digits">Digits</label>
+            <select
+              id="digits"
+              value={config.digits}
+              onChange={(e) => handleInputChange('digits', parseInt(e.target.value))}
+              className="form-select"
+            >
+              <option value={6}>6 digits</option>
+              <option value={8}>8 digits</option>
+            </select>
           </div>
 
         </div>
@@ -94,4 +78,5 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
   )
 }
 
-export default TOTPForm 
+export default TOTPForm
+

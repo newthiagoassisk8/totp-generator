@@ -52,13 +52,13 @@ const TOTPGenerator: React.FC = () => {
 
 
 
-   return (
+    return (
         <div className="totp-generator">
             <div className="generator-container">
                 {showForm ? <TOTPForm
                     onToggleEdit={toggleShowForm}
                     config={config}
-                    onConfigChange={() => handleConfigChange}
+                    onConfigChange={handleConfigChange}
                 /> :
                     <TOTPDisplay
                         items={itemsAsdf}
