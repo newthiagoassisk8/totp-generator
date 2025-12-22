@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import TOTPDisplay from './TOTPDisplay';
 import { TOTPConfig } from '../../types/TOTPTypes';
 import { generateTOTP } from '../../utils/totpUtils';
 import './TOTPGenerator.css';
 import { useTotp } from '../../hooks/useTotpFetching';
 import TOTPForm from './TOTPForm';
+import { useLocation, useNavigate } from 'react-router-dom';
 const TOTPGenerator: React.FC = () => {
     // TODO: Fazer o componetne ter mais de um visualizador de TOTP
     // TODO: Criar botão e colocar o formulário de cadastro de secret
-    const { expiresDate, now, items: apiItems, reload, error, toggleShowForm, showForm } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' })
+    const { expiresDate, now, items: apiItems, reload, error } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' })
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
     const [config, setConfig] = useState<TOTPConfig>({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', digits: 1, algorithm: 'sha1', period: 30 });
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isFormRoute = location.pathname === '/form';
+    const handleToggleEdit = () => {
+        navigate(isFormRoute ? '/' : '/form');
+    };
     const itemsAsdf = apiItems.map(item => {
         return {
             uid: item.uid,
@@ -55,14 +62,14 @@ const TOTPGenerator: React.FC = () => {
     return (
         <div className="totp-generator">
             <div className="generator-container">
-                {showForm ? <TOTPForm
-                    onToggleEdit={toggleShowForm}
+                {isFormRoute ? <TOTPForm
+                    onToggleEdit={handleToggleEdit}
                     config={config}
                     onConfigChange={handleConfigChange}
                 /> :
                     <TOTPDisplay
                         items={itemsAsdf}
-                        onToggleEdit={toggleShowForm}
+                        onToggleEdit={handleToggleEdit}
                     />}
 
 

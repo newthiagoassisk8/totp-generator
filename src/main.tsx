@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 
 // Try to dynamically polyfill Buffer/buffer for libraries (like otplib) that
@@ -36,7 +37,9 @@ ensureBufferPolyfill().then(async () => {
         const { default: App } = await import('./App.tsx');
         ReactDOM.createRoot(document.getElementById('root')!).render(
             <React.StrictMode>
-                <App />
+                <BrowserRouter basename={import.meta.env.BASE_URL}>
+                    <App />
+                </BrowserRouter>
             </React.StrictMode>
         );
     } catch (err) {

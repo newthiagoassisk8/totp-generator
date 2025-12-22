@@ -28,9 +28,8 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
   const [error, setError] = useState<string | null>(null);
 
   function closeButton() {
-    setIsModalOpen(prevState => !prevState)
+    setIsModalOpen(false)
     navigate('/');
-    console.log('chegou aqui?')
   }
 
 
@@ -142,4 +141,3 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
 }
 
 export default TOTPForm
-
