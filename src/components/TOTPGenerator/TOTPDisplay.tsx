@@ -56,7 +56,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
         return (
             <div className="totp-display">
                 <div className="display-container">
-                    <h2>Generated TOTP</h2>
+                    <h2>TOTP gerado</h2>
                     <div className="totp-placeholder">
                         <p>Nenhum item para exibir</p>
                     </div>
@@ -69,7 +69,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
     return (
         <div className="totp-display">
             <div className="display-container">
-                <h2>Generated TOTP</h2>
+                <h2>TOTP gerado</h2>
 
                 {/* LISTA */}
                 <div className="totp-list">
@@ -118,7 +118,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                 <div className="timer-section">
                                     <div className="timer-display">
                                         <span className="time-remaining">{item.timeRemaining}s</span>
-                                        <span className="time-label">remaining</span>
+                                        <span className="time-label">restante</span>
                                     </div>
 
                                     <div className="progress-bar">
@@ -128,7 +128,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                 </div>
 
                                 <div className="refresh-info">
-                                    <p>Code refreshes automatically every {item.period} seconds</p>
+                                    <p>O código é atualizado automaticamente a cada {item.period} segundos</p>
                                 </div>
                             </div>
                         );

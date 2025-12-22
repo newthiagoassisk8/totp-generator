@@ -10,8 +10,8 @@ function App() {
             <div className="App">
                 <ThemeToggle />
                 <header className="app-header">
-                    <h1>TOTP Generator</h1>
-                    <p>Generate Time-based One-Time Passwords</p>
+                    <h1>Gerador de TOTP</h1>
+                    <p>Gere senhas de uso único baseadas em tempo</p>
                 </header>
                 <main>
                     <Routes>
@@ -20,7 +20,7 @@ function App() {
                     </Routes>
                 </main>
                 <footer className="app-footer">
-                    <p>&copy; 2024 TOTP Generator. Secure and reliable.</p>
+                    <p>&copy; 2024 Gerador de TOTP. Seguro e confiável.</p>
                 </footer>
             </div>
         </ThemeProvider>

@@ -76,23 +76,23 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                         id="secret"
                         value={config.secret}
                         onChange={(e) => handleSecretChange(e.target.value)}
-                        placeholder="Enter your base32 secret key"
+                        placeholder="Insira sua chave secreta base32"
                         className="form-input"
                     />
-                    <small className="form-help">Enter the base32 encoded secret key from your TOTP setup</small>
+                    <small className="form-help">Insira a chave secreta base32 da sua configuração de TOTP</small>
                 </div>
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="digits">Digits</label>
+                        <label htmlFor="digits">Dígitos</label>
                         <select
                             id="digits"
                             value={config.digits}
                             onChange={(e) => handleInputChange('digits', parseInt(e.target.value))}
                             className="form-select"
                         >
-                            <option value={6}>6 digits</option>
-                            <option value={7}>7 digits</option>
-                            <option value={8}>8 digits</option>
+                            <option value={6}>6 dígitos</option>
+                            <option value={7}>7 dígitos</option>
+                            <option value={8}>8 dígitos</option>
                         </select>
                     </div>
                     {isModalOpen && (
