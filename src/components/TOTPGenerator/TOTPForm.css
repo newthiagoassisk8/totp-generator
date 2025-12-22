@@ -55,6 +55,21 @@
     border-color: #9ca3af;
 }
 
+.loader {
+  display: inline-block;
+  vertical-align: middle;
+  animation: spin 1.2s linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Dark mode styles */
 [data-theme='dark'] .form-input,
 [data-theme='dark'] .form-select {

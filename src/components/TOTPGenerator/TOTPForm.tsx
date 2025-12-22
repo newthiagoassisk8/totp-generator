@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { TOTPConfig } from '../../types/TOTPTypes'
 import './TOTPForm.css'
 import { EditButton } from './TOTPDisplay'
+import { mockGetTotps } from '../../integrations/api';
+import { InfoModal } from '../Modal/InfoModal.tsx';
+import { useNavigate } from 'react-router-dom';
 
 interface TOTPFormProps {
   config: TOTPConfig
@@ -10,19 +13,8 @@ interface TOTPFormProps {
 
 }
 // TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
-function SaveButton() {
-  return (
-    <button
-      className="save-button"
-      type="button"
-      onClick={() => { }}
-      title="Salvar"
-    >
-      <span className="edit-label">Salvar</span>
-    </button>
-  )
-}
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange }) => {
+
   const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
     onConfigChange({
       ...config,
@@ -30,6 +22,70 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
     })
   }
 
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function closeButton() {
+    setIsModalOpen(prevState => !prevState)
+    navigate('/');
+    console.log('chegou aqui?')
+  }
+
+
+  function Loader() {
+    return (
+      <svg
+        className="loader"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-label="Carregando"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="2"
+          opacity="0.25"
+        />
+        <path
+          d="M22 12a10 10 0 0 1-10 10"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+  function SaveButton() {
+    return (
+      <button
+        className="save-button"
+        type="button"
+        onClick={async () => {
+          try {
+
+            setIsLoading(true)
+            console.log(await mockGetTotps())
+            setIsModalOpen(prevState => !prevState)
+
+          } catch (error) {
+            setError(error)
+          } finally {
+            setIsLoading(false)
+          }
+        }
+        }
+        title="Salvar"
+      >
+        <span className="edit-label"> {isLoading ? <Loader /> : 'Salvar'}</span>
+      </button >
+    )
+  }
   const handleSecretChange = (value: string) => {
     const cleanedSecret = value.replace(/\s/g, '').toUpperCase()
     handleInputChange('secret', cleanedSecret)
@@ -53,7 +109,6 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
             Enter the base32 encoded secret key from your TOTP setup
           </small>
         </div>
-
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="digits">Digits</label>
@@ -64,9 +119,17 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
               className="form-select"
             >
               <option value={6}>6 digits</option>
+              <option value={7}>7 digits</option>
               <option value={8}>8 digits</option>
             </select>
           </div>
+          {isModalOpen && <InfoModal
+            isOpen={isModalOpen}
+            title={!error ? 'Sucesso ' : 'Ops'}
+            message="Dados atualizados com sucesso"
+            onClose={closeButton}
+            error={error}
+          />}
 
         </div>
         <EditButton canEdit={false} onToggle={onToggleEdit} />
