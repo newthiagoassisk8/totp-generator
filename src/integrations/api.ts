@@ -29,12 +29,12 @@ function sleep(ms: number) {
 
 const TOTPKeys = {
     item1: {
-        uid: "item1",
-        label: "Demo 1 - 1 digitos",
+        uid: 'item1',
+        label: 'Demo 1 - 1 digitos',
         icon: null,
-        key: "BBBBBBBBBBBBBBB",
+        key: 'BBBBBBBBBBBBBBB',
         opts: { digits: 6, period: 30 },
-    }
+    },
 };
 
 export async function mockGetTotps() {

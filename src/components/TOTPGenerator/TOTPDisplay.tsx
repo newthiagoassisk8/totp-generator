@@ -1,31 +1,30 @@
+import React, { useState } from 'react';
+import './TOTPDisplay.css';
+import './button.css';
 
-import React, { useState } from 'react'
-import './TOTPDisplay.css'
-import './button.css'
-
-import { MinimalModal } from './MinimalModal'
-import { useTotp } from '../../hooks/useTotpFetching'
+import { MinimalModal } from './MinimalModal';
+import { useTotp } from '../../hooks/useTotpFetching';
 
 type TOTPItem = {
-    uid: string
-    label?: string
-    totp?: string
-    timeRemaining: number
-    period: number
-    error?: string
-    otp: string
-    isValid?: boolean
-}
+    uid: string;
+    label?: string;
+    totp?: string;
+    timeRemaining: number;
+    period: number;
+    error?: string;
+    otp: string;
+    isValid?: boolean;
+};
 
 interface TOTPDisplayProps {
-    items: TOTPItem[]
-    onToggleEdit: () => void
+    items: TOTPItem[];
+    onToggleEdit: () => void;
 }
 
 type EditButtonProps = {
-    canEdit?: boolean
-    onToggle?: () => void
-}
+    canEdit?: boolean;
+    onToggle?: () => void;
+};
 
 export function EditButton({ canEdit, onToggle }: EditButtonProps) {
     return (
@@ -39,18 +38,18 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
         >
             <span className="edit-label">{canEdit ? 'Editar' : 'Voltar'}</span>
         </button>
-    )
+    );
 }
 
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
     //TODO: passar estado de loading via prop em vez de hook
-    const { isLoading: isLoadingHook } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' })
+    const { isLoading: isLoadingHook } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' });
 
-    const [modalForUid, setModalForUid] = useState<string | null>(null)
+    const [modalForUid, setModalForUid] = useState<string | null>(null);
 
     function handleClipBoard(uid: string, totp: string) {
-        setModalForUid(uid)
-        navigator.clipboard.writeText(totp)
+        setModalForUid(uid);
+        navigator.clipboard.writeText(totp);
     }
 
     if (!items || items.length === 0) {
@@ -64,7 +63,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                     <EditButton canEdit={true} onToggle={onToggleEdit} />
                 </div>
             </div>
-        )
+        );
     }
 
     return (
@@ -75,8 +74,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                 {/* LISTA */}
                 <div className="totp-list">
                     {items.map((item) => {
-                        const progressPercentage =
-                            ((item.period - item.timeRemaining) / item.period) * 100
+                        const progressPercentage = ((item.period - item.timeRemaining) / item.period) * 100;
 
                         // tratamento opcional por item
                         if (item.error) {
@@ -87,7 +85,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                         <p>{item.error}</p>
                                     </div>
                                 </div>
-                            )
+                            );
                         }
 
                         return (
@@ -115,7 +113,6 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                             onClose={() => setModalForUid(null)}
                                         />
                                     )}
-
                                 </div>
 
                                 <div className="timer-section">
@@ -125,10 +122,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                     </div>
 
                                     <div className="progress-bar">
-                                        <div
-                                            className="progress-fill"
-                                            style={{ width: `${progressPercentage}%` }}
-                                        />
+                                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                                     </div>
                                     <EditButton canEdit={true} onToggle={onToggleEdit} />
                                 </div>
@@ -137,14 +131,12 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                     <p>Code refreshes automatically every {item.period} seconds</p>
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </div>
-
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default TOTPDisplay
-
+export default TOTPDisplay;

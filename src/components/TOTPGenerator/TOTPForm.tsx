@@ -1,143 +1,116 @@
-import React, { useState } from 'react'
-import { TOTPConfig } from '../../types/TOTPTypes'
-import './TOTPForm.css'
-import { EditButton } from './TOTPDisplay'
+import React, { useState } from 'react';
+import { TOTPConfig } from '../../types/TOTPTypes';
+import './TOTPForm.css';
+import { EditButton } from './TOTPDisplay';
 import { mockGetTotps } from '../../integrations/api';
 import { InfoModal } from '../Modal/InfoModal.tsx';
 import { useNavigate } from 'react-router-dom';
 
 interface TOTPFormProps {
-  config: TOTPConfig
-  onConfigChange: (config: TOTPConfig) => void
-  onToggleEdit: () => void;
-
+    config: TOTPConfig;
+    onConfigChange: (config: TOTPConfig) => void;
+    onToggleEdit: () => void;
 }
 // TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange }) => {
+    const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
+        onConfigChange({
+            ...config,
+            [field]: value,
+        });
+    };
 
-  const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
-    onConfigChange({
-      ...config,
-      [field]: value
-    })
-  }
+    const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+    function closeButton() {
+        setIsModalOpen(false);
+        navigate('/');
+    }
 
-  function closeButton() {
-    setIsModalOpen(false)
-    navigate('/');
-  }
-
-
-  function Loader() {
-    return (
-      <svg
-        className="loader"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-label="Carregando"
-      >
-        <circle
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="2"
-          opacity="0.25"
-        />
-        <path
-          d="M22 12a10 10 0 0 1-10 10"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-  function SaveButton() {
-    return (
-      <button
-        className="save-button"
-        type="button"
-        onClick={async () => {
-          try {
-
-            setIsLoading(true)
-            console.log(await mockGetTotps())
-            setIsModalOpen(prevState => !prevState)
-
-          } catch (error) {
-            setError(error)
-          } finally {
-            setIsLoading(false)
-          }
-        }
-        }
-        title="Salvar"
-      >
-        <span className="edit-label"> {isLoading ? <Loader /> : 'Salvar'}</span>
-      </button >
-    )
-  }
-  const handleSecretChange = (value: string) => {
-    const cleanedSecret = value.replace(/\s/g, '').toUpperCase()
-    handleInputChange('secret', cleanedSecret)
-  }
-
-  return (
-    <div className="totp-form">
-      <h2>Inserir detalhes da conta</h2>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <div className="form-group">
-          <label htmlFor="secret">Emissor</label>
-          <input
-            type="text"
-            id="secret"
-            value={config.secret}
-            onChange={(e) => handleSecretChange(e.target.value)}
-            placeholder="Enter your base32 secret key"
-            className="form-input"
-          />
-          <small className="form-help">
-            Enter the base32 encoded secret key from your TOTP setup
-          </small>
-        </div>
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="digits">Digits</label>
-            <select
-              id="digits"
-              value={config.digits}
-              onChange={(e) => handleInputChange('digits', parseInt(e.target.value))}
-              className="form-select"
+    function Loader() {
+        return (
+            <svg className="loader" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-label="Carregando">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+                <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+        );
+    }
+    function SaveButton() {
+        return (
+            <button
+                className="save-button"
+                type="button"
+                onClick={async () => {
+                    try {
+                        setIsLoading(true);
+                        console.log(await mockGetTotps());
+                        setIsModalOpen((prevState) => !prevState);
+                    } catch (error) {
+                        setError(error);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                }}
+                title="Salvar"
             >
-              <option value={6}>6 digits</option>
-              <option value={7}>7 digits</option>
-              <option value={8}>8 digits</option>
-            </select>
-          </div>
-          {isModalOpen && <InfoModal
-            isOpen={isModalOpen}
-            title={!error ? 'Sucesso ' : 'Ops'}
-            message="Dados atualizados com sucesso"
-            onClose={closeButton}
-            error={error}
-          />}
+                <span className="edit-label"> {isLoading ? <Loader /> : 'Salvar'}</span>
+            </button>
+        );
+    }
+    const handleSecretChange = (value: string) => {
+        const cleanedSecret = value.replace(/\s/g, '').toUpperCase();
+        handleInputChange('secret', cleanedSecret);
+    };
 
+    return (
+        <div className="totp-form">
+            <h2>Inserir detalhes da conta</h2>
+            <form onSubmit={(e) => e.preventDefault()}>
+                <div className="form-group">
+                    <label htmlFor="secret">Emissor</label>
+                    <input
+                        type="text"
+                        id="secret"
+                        value={config.secret}
+                        onChange={(e) => handleSecretChange(e.target.value)}
+                        placeholder="Enter your base32 secret key"
+                        className="form-input"
+                    />
+                    <small className="form-help">Enter the base32 encoded secret key from your TOTP setup</small>
+                </div>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="digits">Digits</label>
+                        <select
+                            id="digits"
+                            value={config.digits}
+                            onChange={(e) => handleInputChange('digits', parseInt(e.target.value))}
+                            className="form-select"
+                        >
+                            <option value={6}>6 digits</option>
+                            <option value={7}>7 digits</option>
+                            <option value={8}>8 digits</option>
+                        </select>
+                    </div>
+                    {isModalOpen && (
+                        <InfoModal
+                            isOpen={isModalOpen}
+                            title={!error ? 'Sucesso ' : 'Ops'}
+                            message="Dados atualizados com sucesso"
+                            onClose={closeButton}
+                            error={error}
+                        />
+                    )}
+                </div>
+                <EditButton canEdit={false} onToggle={onToggleEdit} />
+
+                <SaveButton />
+            </form>
         </div>
-        <EditButton canEdit={false} onToggle={onToggleEdit} />
+    );
+};
 
-        <SaveButton />
-      </form>
-
-    </div>
-  )
-}
-
-export default TOTPForm
+export default TOTPForm;

@@ -1,26 +1,24 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTotp } from '../integrations/api';
 
-
 interface useTotpParams {
     secret?: string;
 }
 
 type TOTPItem = {
-    uid: string
-    label?: string
-    otp: string
-    timeRemaining: number
-    period: number
-    error?: string
-    isValid?: boolean
-}
+    uid: string;
+    label?: string;
+    otp: string;
+    timeRemaining: number;
+    period: number;
+    error?: string;
+    isValid?: boolean;
+};
 
 /**
  * Retorno do hook
  */
 export interface UseTotpReturn {
-
     expiresDate: number;
     now: number;
     showForm: boolean;
@@ -28,7 +26,7 @@ export interface UseTotpReturn {
     error: string | null;
     reload: () => Promise<void>;
     isLoading: boolean;
-    toggleShowForm: () => void
+    toggleShowForm: () => void;
     items: TOTPItem[];
 }
 
@@ -41,32 +39,29 @@ export interface UseTotpReturn {
  */
 export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [showForm, setShowForm] = useState(false);
-    const [items, setItems] = useState<TOTPItem[]>([])
+    const [items, setItems] = useState<TOTPItem[]>([]);
     const [expiresDate, setExpiresDate] = useState<number>(30);
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
     function toggleShowForm() {
-        setShowForm(prev => !prev)
+        setShowForm((prev) => !prev);
     }
-
-
-
 
     const fetchApi = useCallback(async (): Promise<void> => {
         setError(null);
-        setIsLoading(true)
+        setIsLoading(true);
         try {
             const result = await getTotp();
-            setItems(result)
+            setItems(result);
 
             setCurrentTOTP(result.otp);
-            setCurrentTime(result?.now)
+            setCurrentTime(result?.now);
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }, [secret]);
 
@@ -92,6 +87,6 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         isLoading,
         showForm,
         toggleShowForm,
-        items
+        items,
     };
 }

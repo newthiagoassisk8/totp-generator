@@ -1,42 +1,31 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react';
 
 type MinimalModalProps = {
-    isShown: boolean
-    text: string
-    onClose: () => void
-    duration?: number
-}
+    isShown: boolean;
+    text: string;
+    onClose: () => void;
+    duration?: number;
+};
 
-export function MinimalModal({
-    text,
-    onClose,
-    duration = 400
-}: MinimalModalProps) {
-    const [visible, setVisible] = useState(false)
+export function MinimalModal({ text, onClose, duration = 400 }: MinimalModalProps) {
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-
-        setVisible(true)
+        setVisible(true);
 
         const hideTimer = setTimeout(() => {
-            setVisible(false)
-        }, duration)
+            setVisible(false);
+        }, duration);
 
         const closeTimer = setTimeout(() => {
-            onClose()
-        }, duration)
+            onClose();
+        }, duration);
 
         return () => {
-            clearTimeout(hideTimer)
-            clearTimeout(closeTimer)
-        }
-    }, [duration, onClose])
+            clearTimeout(hideTimer);
+            clearTimeout(closeTimer);
+        };
+    }, [duration, onClose]);
 
-
-    return (
-        <div className={`modal ${visible ? "show" : "hide"}`}>
-            {text}
-        </div>
-    )
+    return <div className={`modal ${visible ? 'show' : 'hide'}`}>{text}</div>;
 }
-

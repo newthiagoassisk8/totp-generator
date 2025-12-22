@@ -56,18 +56,17 @@
 }
 
 .loader {
-  display: inline-block;
-  vertical-align: middle;
-  animation: spin 1.2s linear infinite;
-  transform-origin: center;
-  transform-box: fill-box;
+    display: inline-block;
+    vertical-align: middle;
+    animation: spin 1.2s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
 }
 
-
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Dark mode styles */
