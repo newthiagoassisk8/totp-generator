@@ -32,6 +32,14 @@
         border-color 120ms ease;
 }
 
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 8px;
+    gap: 12px;
+
+}
+
 .edit-button:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 16px var(--shadow-color);

@@ -46,7 +46,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                 onClick={async () => {
                     try {
                         setIsLoading(true);
-                        console.log(await mockGetTotps());
+                        await mockGetTotps();
                         setIsModalOpen((prevState) => !prevState);
                     } catch (error) {
                         setError(error);
@@ -105,9 +105,10 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                         />
                     )}
                 </div>
-                <EditButton canEdit={false} onToggle={onToggleEdit} />
-
-                <SaveButton />
+                <div className="form-actions">
+                    <EditButton canEdit={false} onToggle={onToggleEdit} />
+                    <SaveButton />
+                </div>
             </form>
         </div>
     );
