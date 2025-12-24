@@ -17,7 +17,6 @@ export const generateTOTP = (config: TOTPConfig): string => {
     try {
         // Generate TOTP using the current time
         const totp = authenticator.generate(config.secret);
-        console.log('otplib generated TOTP:', totp, 'for secret:', config.secret); // Debug log
         return totp;
     } catch (error) {
         console.error('otplib error:', error); // Debug log
@@ -30,10 +29,8 @@ export const testTOTPGeneration = (): string => {
     try {
         const testSecret = 'JBSWY3DPEHPK3PXP'; // Google's test secret
         const totp = authenticator.generate(testSecret);
-        console.log('Test TOTP generation successful:', totp);
         return totp;
     } catch (error) {
-        console.error('Test TOTP generation failed:', error);
         throw error;
     }
 };
