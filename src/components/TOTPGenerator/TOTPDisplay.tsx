@@ -6,12 +6,12 @@ import { useTotp } from '../../hooks/useTotpFetching';
 import { TOTPItem } from '../../types/TOTPItem';
 interface TOTPDisplayProps {
     items: TOTPItem[];
-    onToggleEdit: () => void;
+    onToggleEdit: (uid?: string) => void;
 }
 
 type EditButtonProps = {
     canEdit?: boolean;
-    onToggle?: () => void;
+    onToggle?: (uid?: string) => void;
 };
 
 export function EditButton({ canEdit, onToggle }: EditButtonProps) {
@@ -19,7 +19,7 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
         <button
             className="edit-button"
             type="button"
-            onClick={onToggle}
+            onClick={() => onToggle?.()}
             aria-pressed={canEdit}
             aria-label={canEdit ? 'Sair do modo de edição' : 'Entrar no modo de edição'}
             title={canEdit ? 'Sair do modo de edição' : 'Editar'}
@@ -112,7 +112,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
                                     <div className="progress-bar">
                                         <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                                     </div>
-                                    <EditButton canEdit={true} onToggle={onToggleEdit} />
+                                    <EditButton canEdit={true} onToggle={() => onToggleEdit(item.uid)} />
                                 </div>
 
                                 <div className="refresh-info">

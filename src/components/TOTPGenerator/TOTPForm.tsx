@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TOTPConfig } from '../../types/TOTPTypes';
 import './TOTPForm.css';
 import { EditButton } from './TOTPDisplay';
 import { InfoModal } from '../Modal/InfoModal.tsx';
 import { useTotp } from '../../hooks/useTotpFetching.ts';
+import { useState } from 'react';
 
 interface TOTPFormProps {
     config: TOTPConfig;
     onConfigChange: (config: TOTPConfig) => void;
-    onToggleEdit: () => void;
+    onToggleEdit: (uid?: string) => void;
+    selectedId: string | null;
+    selectedLabel?: string;
 }
 
 // TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
-const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange }) => {
+const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange, selectedId, selectedLabel }) => {
     const { update, isLoading, error, isModalOpen } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
     const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
         onConfigChange({
             ...config,
             [field]: value,
         });
+
     };
 
     const navigate = useNavigate();
@@ -37,12 +40,18 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
         );
     }
     function SaveButton() {
+        const canSave = Boolean(selectedId);
+        const label = selectedLabel ?? selectedId ?? 'Sem label';
         return (
             <button
                 className="save-button"
                 type="button"
                 title="Salvar"
-                onClick={() => update({ uid: 'item1', label: 'Demo 1 - 1 digitos', digits: 6 })}
+                onClick={() => {
+                    if (!selectedId) return;
+                    update({ uid: selectedId, label, digits: config.digits });
+                }}
+                disabled={!canSave}
             >
                 <span className="edit-label"> {isLoading ? <Loader /> : 'Salvar'}</span>
             </button>
@@ -62,7 +71,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                     <input
                         type="text"
                         id="secret"
-                        value={config.secret}
+                        value={selectedLabel}
                         onChange={(e) => handleSecretChange(e.target.value)}
                         placeholder="Insira sua chave secreta base32"
                         className="form-input"

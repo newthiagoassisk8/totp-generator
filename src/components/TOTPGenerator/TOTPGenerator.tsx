@@ -8,7 +8,6 @@ import TOTPForm from './TOTPForm';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TOTPItem } from '../../types/TOTPItem';
 const TOTPGenerator: React.FC = () => {
-    // TODO: Criar botão e colocar o formulário de cadastro de secret
     const { expiresDate, now, items: apiItems, reload, error } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
     const [config, setConfig] = useState<TOTPConfig>({
@@ -23,7 +22,10 @@ const TOTPGenerator: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isFormRoute = location.pathname === '/form';
-    const handleToggleEdit = () => {
+    const handleToggleEdit = (uid?: string) => {
+        if (uid) {
+            setSelectedId(uid);
+        }
         navigate(isFormRoute ? '/' : '/form');
     };
     function handleSelectItem(uid: string) {
@@ -39,6 +41,7 @@ const TOTPGenerator: React.FC = () => {
             error: error?.toString(),
         };
     });
+    const selectedItem = apiItems.find((item: TOTPItem) => item.uid === selectedId);
 
     const handleConfigChange = (newConfig: TOTPConfig) => {
         setConfig(newConfig);
@@ -71,7 +74,13 @@ const TOTPGenerator: React.FC = () => {
         <div className="totp-generator">
             <div className="generator-container">
                 {isFormRoute ? (
-                    <TOTPForm onToggleEdit={handleToggleEdit} config={config} onConfigChange={handleConfigChange} />
+                    <TOTPForm
+                        onToggleEdit={handleToggleEdit}
+                        config={config}
+                        onConfigChange={handleConfigChange}
+                        selectedId={selectedId}
+                        selectedLabel={selectedItem?.label ?? selectedItem?.uid}
+                    />
                 ) : (
                     <TOTPDisplay items={itemsAsdf} onToggleEdit={handleToggleEdit} />
                 )}
