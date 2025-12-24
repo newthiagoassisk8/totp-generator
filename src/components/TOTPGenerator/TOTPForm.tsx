@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { TOTPConfig } from '../../types/TOTPTypes';
 import './TOTPForm.css';
 import { EditButton } from './TOTPDisplay';
@@ -16,12 +17,17 @@ interface TOTPFormProps {
 // TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange, selectedId, selectedLabel }) => {
     const { update, isLoading, error, isModalOpen } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
+    const [labelValue, setLabelValue] = useState(selectedLabel ?? '');
     const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
         onConfigChange({
             ...config,
             [field]: value,
         });
     };
+    useEffect(() => {
+        setLabelValue(selectedLabel ?? '')
+
+    }, [selectedLabel])
 
     const navigate = useNavigate();
 
@@ -39,7 +45,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
     }
     function SaveButton() {
         const canSave = Boolean(selectedId);
-        const label = selectedLabel ?? selectedId ?? 'Sem label';
+        const label = labelValue ?? selectedId ?? 'Sem label';
         return (
             <button
                 className="save-button"
@@ -69,8 +75,8 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                     <input
                         type="text"
                         id="secret"
-                        value={selectedLabel}
-                        onChange={(e) => handleSecretChange(e.target.value)}
+                        value={labelValue}
+                        onChange={(e) => setLabelValue(e.target.value)}
                         placeholder="Insira sua chave secreta base32"
                         className="form-input"
                     />
