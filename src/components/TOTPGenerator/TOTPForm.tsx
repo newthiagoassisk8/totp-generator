@@ -61,10 +61,6 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
             </button>
         );
     }
-    const handleSecretChange = (value: string) => {
-        const cleanedSecret = value.replace(/\s/g, '').toUpperCase();
-        handleInputChange('secret', cleanedSecret);
-    };
 
     return (
         <div className="totp-form">
