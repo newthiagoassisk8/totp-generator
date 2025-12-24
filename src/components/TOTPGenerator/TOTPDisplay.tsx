@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import './TOTPDisplay.css';
 import './button.css';
-
 import { MinimalModal } from './MinimalModal';
 import { useTotp } from '../../hooks/useTotpFetching';
-
-type TOTPItem = {
-    uid: string;
-    label?: string;
-    totp?: string;
-    timeRemaining: number;
-    period: number;
-    error?: string;
-    otp: string;
-    isValid?: boolean;
-};
-
+import { TOTPItem } from '../../types/TOTPItem';
 interface TOTPDisplayProps {
     items: TOTPItem[];
     onToggleEdit: () => void;

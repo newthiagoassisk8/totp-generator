@@ -1,10 +1,6 @@
-export type TotpItem = {
-    uid: string;
-    label: string;
-    icon: string | null;
-    key: string;
-};
-const API_URL = 'http://192.168.0.27:3000/api';
+import { UpdateTotpParams } from '../hooks/useTotpFetching';
+
+const API_URL = 'http://192.168.0.27:3001/api';
 
 export async function getTotp() {
     const baseUrl = `${API_URL}/totp`;
@@ -22,22 +18,24 @@ export async function getTotp() {
         throw error;
     }
 }
+export async function updateTotp(params: UpdateTotpParams) {
+    try {
+        const response = await fetch(`${API_URL}/totp`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        });
 
-function sleep(ms: number) {
-    return new Promise<void>((resolve) => setTimeout(resolve, ms));
-}
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-const TOTPKeys = {
-    item1: {
-        uid: 'item1',
-        label: 'Demo 1 - 1 digitos',
-        icon: null,
-        key: 'BBBBBBBBBBBBBBB',
-        opts: { digits: 6, period: 30 },
-    },
-};
-
-export async function mockGetTotps() {
-    await sleep(4500); // simula rede
-    return Object.values(TOTPKeys).map((x) => structuredClone(x));
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }

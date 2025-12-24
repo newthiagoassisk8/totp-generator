@@ -6,8 +6,8 @@ import './TOTPGenerator.css';
 import { useTotp } from '../../hooks/useTotpFetching';
 import TOTPForm from './TOTPForm';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { TOTPItem } from '../../types/TOTPItem';
 const TOTPGenerator: React.FC = () => {
-    // TODO: Fazer o componetne ter mais de um visualizador de TOTP
     // TODO: Criar botão e colocar o formulário de cadastro de secret
     const { expiresDate, now, items: apiItems, reload, error } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
@@ -17,13 +17,19 @@ const TOTPGenerator: React.FC = () => {
         algorithm: 'sha1',
         period: 30,
     });
+    // TODO: Passar ID do item como argumento para a função editBUtton do componente filho
+    const [selectedId, setSelectedId] = useState<string | null>(null);
+
     const navigate = useNavigate();
     const location = useLocation();
     const isFormRoute = location.pathname === '/form';
     const handleToggleEdit = () => {
         navigate(isFormRoute ? '/' : '/form');
     };
-    const itemsAsdf = apiItems.map((item) => {
+    function handleSelectItem(uid: string) {
+        setSelectedId(uid);
+    }
+    const itemsAsdf = apiItems.map((item: TOTPItem) => {
         return {
             uid: item.uid,
             label: item.label ?? item.uid,

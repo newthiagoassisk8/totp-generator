@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TOTPConfig } from '../../types/TOTPTypes';
 import './TOTPForm.css';
 import { EditButton } from './TOTPDisplay';
-import { mockGetTotps } from '../../integrations/api';
 import { InfoModal } from '../Modal/InfoModal.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useTotp } from '../../hooks/useTotpFetching.ts';
 
 interface TOTPFormProps {
     config: TOTPConfig;
     onConfigChange: (config: TOTPConfig) => void;
     onToggleEdit: () => void;
 }
+
 // TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange }) => {
+    const { update, isLoading, error, isModalOpen } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
     const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
         onConfigChange({
             ...config,
@@ -21,12 +23,8 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
     };
 
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     function closeButton() {
-        setIsModalOpen(false);
         navigate('/');
     }
 
@@ -43,18 +41,8 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
             <button
                 className="save-button"
                 type="button"
-                onClick={async () => {
-                    try {
-                        setIsLoading(true);
-                        await mockGetTotps();
-                        setIsModalOpen((prevState) => !prevState);
-                    } catch (error) {
-                        setError(error);
-                    } finally {
-                        setIsLoading(false);
-                    }
-                }}
                 title="Salvar"
+                onClick={() => update({ uid: 'item1', label: 'Demo 1 - 1 digitos', digits: 6 })}
             >
                 <span className="edit-label"> {isLoading ? <Loader /> : 'Salvar'}</span>
             </button>
@@ -98,8 +86,8 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                     {isModalOpen && (
                         <InfoModal
                             isOpen={isModalOpen}
-                            title={!error ? 'Sucesso ' : 'Ops'}
-                            message="Dados atualizados com sucesso"
+                            title={error ? 'Ops' : 'Sucesso'}
+                            message={error ? error : 'Dados atualizados com sucesso'}
                             onClose={closeButton}
                             error={error}
                         />

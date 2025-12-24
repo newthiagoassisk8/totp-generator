@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getTotp } from '../integrations/api';
+import { getTotp, updateTotp } from '../integrations/api';
+import { TOTPItem } from '../types/TOTPItem';
 
 interface useTotpParams {
     secret?: string;
 }
 
-type TOTPItem = {
+export interface UpdateTotpParams {
     uid: string;
-    label?: string;
-    otp: string;
-    timeRemaining: number;
-    period: number;
-    error?: string;
-    isValid?: boolean;
-};
-
+    label: string;
+    digits: number;
+}
 /**
  * Retorno do hook
  */
@@ -26,7 +22,9 @@ export interface UseTotpReturn {
     error: string | null;
     reload: () => Promise<void>;
     isLoading: boolean;
+    isModalOpen: boolean;
     toggleShowForm: () => void;
+    update: (payload: UpdateTotpParams) => Promise<void>;
     items: TOTPItem[];
 }
 
@@ -43,6 +41,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [showForm, setShowForm] = useState(false);
     const [items, setItems] = useState<TOTPItem[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [expiresDate, setExpiresDate] = useState<number>(30);
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
     function toggleShowForm() {
@@ -64,6 +63,24 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
             setIsLoading(false);
         }
     }, [secret]);
+
+    const saveTotp = async (payload: { digits: number; label: string; uid: string }) => {
+        setError(null);
+        setIsLoading(true);
+
+        try {
+            await updateTotp(payload);
+            setIsModalOpen((prev) => !prev);
+            setShowForm(false);
+            await fetchApi();
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message ?? 'Erro ao salvar TOTP');
+            setIsModalOpen(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     /**
      * Efeito para disparar a verificação automática (com debounce)
@@ -87,6 +104,8 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         isLoading,
         showForm,
         toggleShowForm,
+        update: saveTotp,
         items,
+        isModalOpen,
     };
 }
