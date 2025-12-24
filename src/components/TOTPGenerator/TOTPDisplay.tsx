@@ -7,6 +7,7 @@ import { TOTPItem } from '../../types/TOTPItem';
 interface TOTPDisplayProps {
     items: TOTPItem[];
     onToggleEdit: (uid?: string) => void;
+    error: string | null;
 }
 
 type EditButtonProps = {
@@ -29,7 +30,7 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
     );
 }
 
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error }) => {
     //TODO: passar estado de loading via prop em vez de hook
     const { isLoading: isLoadingHook } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' });
 
@@ -38,6 +39,18 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit }) => {
     function handleClipBoard(uid: string, totp: string) {
         setModalForUid(uid);
         navigator.clipboard.writeText(totp);
+    }
+    if (error) {
+        return (
+            <div className="totp-display">
+                <div className="display-container">
+                    <div className="totp-placeholder">
+                        <p className="error">{error}</p>
+                    </div>
+                </div>
+            </div>
+        )
+
     }
 
     if (!items || items.length === 0) {

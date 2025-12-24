@@ -28,9 +28,6 @@ const TOTPGenerator: React.FC = () => {
         }
         navigate(isFormRoute ? '/' : '/form');
     };
-    function handleSelectItem(uid: string) {
-        setSelectedId(uid);
-    }
     const itemsAsdf = apiItems.map((item: TOTPItem) => {
         return {
             uid: item.uid,
@@ -82,7 +79,7 @@ const TOTPGenerator: React.FC = () => {
                         selectedLabel={selectedItem?.label ?? selectedItem?.uid}
                     />
                 ) : (
-                    <TOTPDisplay items={itemsAsdf} onToggleEdit={handleToggleEdit} />
+                    <TOTPDisplay items={itemsAsdf} error={error} onToggleEdit={handleToggleEdit} />
                 )}
             </div>
         </div>
