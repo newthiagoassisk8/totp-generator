@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import './TOTPDisplay.css';
 import './button.css';
 import { MinimalModal } from './MinimalModal';
-import { useTotp } from '../../hooks/useTotpFetching';
 import { TOTPItem } from '../../types/TOTPItem';
 interface TOTPDisplayProps {
     items: TOTPItem[];
     onToggleEdit: (uid?: string) => void;
     error: string | null;
+    isLoading: boolean;
 }
 
 type EditButtonProps = {
@@ -30,12 +30,9 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
     );
 }
 
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error }) => {
-    //TODO: passar estado de loading via prop em vez de hook
-    const { isLoading: isLoadingHook } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAA' });
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, isLoading }) => {
 
     const [modalForUid, setModalForUid] = useState<string | null>(null);
-
     function handleClipBoard(uid: string, totp: string) {
         setModalForUid(uid);
         navigator.clipboard.writeText(totp);
@@ -49,8 +46,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error })
                     </div>
                 </div>
             </div>
-        )
-
+        );
     }
 
     if (!items || items.length === 0) {
@@ -94,7 +90,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error })
                                 <h3>{item.label ?? item.uid}</h3>
 
                                 <div className="totp-code">
-                                    {!isLoadingHook ? (
+                                    {!isLoading ? (
                                         <span
                                             className="code-text"
                                             onClick={() => handleClipBoard(item.uid, item.otp)}

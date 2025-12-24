@@ -4,7 +4,6 @@ import './TOTPForm.css';
 import { EditButton } from './TOTPDisplay';
 import { InfoModal } from '../Modal/InfoModal.tsx';
 import { useTotp } from '../../hooks/useTotpFetching.ts';
-import { useState } from 'react';
 
 interface TOTPFormProps {
     config: TOTPConfig;
@@ -22,7 +21,6 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
             ...config,
             [field]: value,
         });
-
     };
 
     const navigate = useNavigate();
@@ -47,9 +45,9 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                 className="save-button"
                 type="button"
                 title="Salvar"
-                onClick={() => {
+                onClick={async () => {
                     if (!selectedId) return;
-                    update({ uid: selectedId, label, digits: config.digits });
+                    await update({ uid: selectedId, label: label, digits: config.digits });
                 }}
                 disabled={!canSave}
             >

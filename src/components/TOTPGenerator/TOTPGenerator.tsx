@@ -8,11 +8,11 @@ import TOTPForm from './TOTPForm';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TOTPItem } from '../../types/TOTPItem';
 const TOTPGenerator: React.FC = () => {
-    const { expiresDate, now, items: apiItems, reload, error } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
+    const { expiresDate, now, items: apiItems, reload, error, isLoading } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
     const [config, setConfig] = useState<TOTPConfig>({
         secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-        digits: 1,
+        digits: 6,
         algorithm: 'sha1',
         period: 30,
     });
@@ -28,7 +28,7 @@ const TOTPGenerator: React.FC = () => {
         }
         navigate(isFormRoute ? '/' : '/form');
     };
-    const itemsAsdf = apiItems.map((item: TOTPItem) => {
+    const items = apiItems.map((item: TOTPItem) => {
         return {
             uid: item.uid,
             label: item.label ?? item.uid,
@@ -79,7 +79,7 @@ const TOTPGenerator: React.FC = () => {
                         selectedLabel={selectedItem?.label ?? selectedItem?.uid}
                     />
                 ) : (
-                    <TOTPDisplay items={itemsAsdf} error={error} onToggleEdit={handleToggleEdit} />
+                    <TOTPDisplay items={items} error={error} onToggleEdit={handleToggleEdit} isLoading={isLoading} />
                 )}
             </div>
         </div>
