@@ -16,7 +16,6 @@ const TOTPGenerator: React.FC = () => {
         algorithm: 'sha1',
         period: 30,
     });
-    // TODO: Passar ID do item como argumento para a função editBUtton do componente filho
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
     const navigate = useNavigate();

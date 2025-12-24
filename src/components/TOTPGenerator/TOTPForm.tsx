@@ -14,7 +14,6 @@ interface TOTPFormProps {
     selectedLabel?: string;
 }
 
-// TODO: Editar somente quantos digitos (por padrão 6) e o emissor Só pode 6 7 8 digitos
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange, selectedId, selectedLabel }) => {
     const { update, isLoading, error, isModalOpen } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
     const [labelValue, setLabelValue] = useState(selectedLabel ?? '');
