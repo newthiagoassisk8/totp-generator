@@ -72,7 +72,8 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
             await updateTotp(payload);
             setIsModalOpen((prev) => !prev);
             setShowForm(false);
-            await fetchApi();
+
+
         } catch (err: any) {
             console.error(err);
             setError(err.message ?? 'Erro ao salvar TOTP');
