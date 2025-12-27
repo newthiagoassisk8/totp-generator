@@ -11,6 +11,7 @@ function App() {
                 <ThemeToggle />
                 <header className="app-header">
                     <h1>Gerador de TOTP</h1>
+
                     <p>Gere senhas de uso único baseadas em tempo</p>
                 </header>
                 <main>

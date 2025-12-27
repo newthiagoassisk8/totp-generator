@@ -3,6 +3,8 @@ import './TOTPDisplay.css';
 import './button.css';
 import { MinimalModal } from './MinimalModal';
 import { TOTPItem } from '../../types/TOTPItem';
+
+import { useTotpContext } from '../../contexts/TotpContext';
 interface TOTPDisplayProps {
     items: TOTPItem[];
     onToggleEdit: (uid?: string) => void;
@@ -31,8 +33,9 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
 }
 
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, isLoading }) => {
-
     const [modalForUid, setModalForUid] = useState<string | null>(null);
+
+    const { showForm } = useTotpContext();
     function handleClipBoard(uid: string, totp: string) {
         setModalForUid(uid);
         navigator.clipboard.writeText(totp);
@@ -121,7 +124,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                     <div className="progress-bar">
                                         <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                                     </div>
-                                    <EditButton canEdit={true} onToggle={() => onToggleEdit(item.uid)} />
+                                    <EditButton canEdit={!showForm} onToggle={() => onToggleEdit(item.uid)} />
                                 </div>
 
                                 <div className="refresh-info">

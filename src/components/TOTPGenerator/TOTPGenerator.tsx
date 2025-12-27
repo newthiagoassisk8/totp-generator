@@ -3,12 +3,13 @@ import TOTPDisplay from './TOTPDisplay';
 import { TOTPConfig } from '../../types/TOTPTypes';
 import { generateTOTP } from '../../utils/totpUtils';
 import './TOTPGenerator.css';
-import { useTotp } from '../../hooks/useTotpFetching';
 import TOTPForm from './TOTPForm';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TOTPItem } from '../../types/TOTPItem';
-const TOTPGenerator: React.FC = () => {
-    const { expiresDate, now, items: apiItems, reload, error, isLoading } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
+import { TotpProvider, useTotpContext } from '../../contexts/TotpContext';
+
+const TOTPGeneratorContent: React.FC = () => {
+    const { expiresDate, now, items: apiItems, reload, needsRefresh, error, isLoading } = useTotpContext();
     const [timeRemaining, setTimeRemaining] = useState<number>(Math.floor((expiresDate - now) / 1000));
     const [config, setConfig] = useState<TOTPConfig>({
         secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
@@ -25,7 +26,9 @@ const TOTPGenerator: React.FC = () => {
         if (uid) {
             setSelectedId(uid);
         }
-        navigate(isFormRoute ? '/' : '/form');
+        navigate(isFormRoute ? '/' : '/form'
+
+        );
     };
     const items = apiItems.map((item: TOTPItem) => {
         return {
@@ -45,17 +48,19 @@ const TOTPGenerator: React.FC = () => {
     };
 
     useEffect(() => {
+        if (needsRefresh) {
+            reload();
+        }
+
         const timer = setInterval(() => {
             setTimeRemaining((prev) => {
                 if (prev <= 1) {
                     try {
                         const totp = generateTOTP(config);
                         reload();
-                        console.log('Timer reset - New TOTP:', totp); // Debug log
 
                         return config.period;
                     } catch (error) {
-                        console.error('Timer reset TOTP error:', error); // Debug log
                         return config.period;
                     }
                 }
@@ -64,7 +69,7 @@ const TOTPGenerator: React.FC = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [30, config]);
+    }, [30, config, needsRefresh]);
 
     return (
         <div className="totp-generator">
@@ -84,5 +89,11 @@ const TOTPGenerator: React.FC = () => {
         </div>
     );
 };
-
+const TOTPGenerator: React.FC = () => {
+    return (
+        <TotpProvider secret="AAAAAAAA">
+            <TOTPGeneratorContent />
+        </TotpProvider>
+    );
+};
 export default TOTPGenerator;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getTotp, updateTotp } from '../integrations/api';
 import { TOTPItem } from '../types/TOTPItem';
 
-interface useTotpParams {
+export interface useTotpParams {
     secret?: string;
 }
 
@@ -25,9 +25,10 @@ export interface UseTotpReturn {
     isModalOpen: boolean;
     toggleShowForm: () => void;
     update: (payload: UpdateTotpParams) => Promise<void>;
+    closeModal: () => void;
     items: TOTPItem[];
+    needsRefresh: boolean | null;
 }
-
 /**
  * currentTotp, now e expireDate precisa ser checado antes de exportar
  *
@@ -40,16 +41,21 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [currentTOTP, setCurrentTOTP] = useState('');
     const [showForm, setShowForm] = useState(false);
+
+    const [needsRefresh, setNeedsRefresh] = useState<boolean | null>(false);
     const [items, setItems] = useState<TOTPItem[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [expiresDate, setExpiresDate] = useState<number>(30);
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
+
     function toggleShowForm() {
         setShowForm((prev) => !prev);
     }
 
     const fetchApi = useCallback(async (): Promise<void> => {
         setError(null);
+        setNeedsRefresh(false);
+
         setIsLoading(true);
         try {
             const result = await getTotp();
@@ -57,6 +63,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
 
             setCurrentTOTP(result.otp);
             setCurrentTime(result?.now);
+            console.log('fetch api');
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
@@ -70,10 +77,8 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
 
         try {
             await updateTotp(payload);
-            setIsModalOpen((prev) => !prev);
-            setShowForm(false);
-
-
+            await fetchApi();
+            setIsModalOpen(true);
         } catch (err: any) {
             console.error(err);
             setError(err.message ?? 'Erro ao salvar TOTP');
@@ -106,7 +111,9 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         showForm,
         toggleShowForm,
         update: saveTotp,
+        closeModal: () => setIsModalOpen(false),
         items,
         isModalOpen,
+        needsRefresh,
     };
 }

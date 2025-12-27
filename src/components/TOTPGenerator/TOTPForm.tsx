@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { TOTPConfig } from '../../types/TOTPTypes';
 import './TOTPForm.css';
 import { EditButton } from './TOTPDisplay';
-import { InfoModal } from '../Modal/InfoModal.tsx';
-import { useTotp } from '../../hooks/useTotpFetching.ts';
+import { InfoModal } from '../Modal/InfoModal';
+import { useTotpContext } from '../../contexts/TotpContext';
 
 interface TOTPFormProps {
     config: TOTPConfig;
@@ -15,7 +15,7 @@ interface TOTPFormProps {
 }
 
 const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChange, selectedId, selectedLabel }) => {
-    const { update, isLoading, error, isModalOpen } = useTotp({ secret: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' });
+    const { update, isLoading, error, isModalOpen, closeModal } = useTotpContext();
     const [labelValue, setLabelValue] = useState(selectedLabel ?? '');
     const handleInputChange = (field: keyof TOTPConfig, value: string | number) => {
         onConfigChange({
@@ -24,13 +24,13 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
         });
     };
     useEffect(() => {
-        setLabelValue(selectedLabel ?? '')
-
-    }, [selectedLabel])
+        setLabelValue(selectedLabel ?? '');
+    }, [selectedLabel]);
 
     const navigate = useNavigate();
 
     function closeButton() {
+        closeModal();
         navigate('/');
     }
 
