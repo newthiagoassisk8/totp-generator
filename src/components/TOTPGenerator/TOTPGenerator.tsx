@@ -51,25 +51,28 @@ const TOTPGeneratorContent: React.FC = () => {
         if (needsRefresh) {
             reload();
         }
+    }, [needsRefresh, reload]);
 
+    useEffect(() => {
         const timer = setInterval(() => {
-            setTimeRemaining((prev) => {
-                if (prev <= 1) {
-                    try {
-                        const totp = generateTOTP(config);
-                        reload();
-
-                        return config.period;
-                    } catch (error) {
-                        return config.period;
-                    }
-                }
-                return prev - 1;
-            });
+            setTimeRemaining((prev) => prev - 1);
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [30, config, needsRefresh]);
+    }, [config.period]);
+
+    useEffect(() => {
+        if (timeRemaining > 0) return;
+
+        try {
+            generateTOTP(config);
+            reload();
+        } catch (error) {
+            // Ignore invalid config; reset the timer regardless.
+        }
+
+        setTimeRemaining(config.period);
+    }, [timeRemaining, config, reload]);
 
     return (
         <div className="totp-generator">
