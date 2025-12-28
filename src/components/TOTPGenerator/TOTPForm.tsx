@@ -52,7 +52,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                 title="Salvar"
                 onClick={async () => {
                     if (!selectedId) return;
-                    await update({ uid: selectedId, label: label, digits: config.digits });
+                    await update({ id: selectedId, label: label, digits: config.digits });
                 }}
                 disabled={!canSave}
             >

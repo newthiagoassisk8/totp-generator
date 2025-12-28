@@ -7,7 +7,7 @@ export interface useTotpParams {
 }
 
 export interface UpdateTotpParams {
-    uid: string;
+    id: string;
     label: string;
     digits: number;
 }
@@ -63,7 +63,6 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
 
             setCurrentTOTP(result.otp);
             setCurrentTime(result?.now);
-            console.log('fetch api');
         } catch (err: any) {
             setError(err.message || 'Erro ao consumir api');
         } finally {
@@ -71,7 +70,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         }
     }, [secret]);
 
-    const saveTotp = async (payload: { digits: number; label: string; uid: string }) => {
+    const saveTotp = async (payload: { digits: number; label: string; id: string }) => {
         setError(null);
         setIsLoading(true);
 

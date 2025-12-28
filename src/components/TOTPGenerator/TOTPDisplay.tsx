@@ -79,8 +79,8 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                         // tratamento opcional por item
                         if (item.error) {
                             return (
-                                <div key={item.uid} className="totp-card">
-                                    <h3>{item.label ?? item.uid}</h3>
+                                <div key={item.id} className="totp-card">
+                                    <h3>{item.label ?? item.id}</h3>
                                     <div className="totp-placeholder">
                                         <p>{item.error}</p>
                                     </div>
@@ -89,14 +89,14 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                         }
 
                         return (
-                            <div key={item.uid} className="totp-card">
-                                <h3>{item.label ?? item.uid}</h3>
+                            <div key={item.id} className="totp-card">
+                                <h3>{item.label ?? item.id}</h3>
 
                                 <div className="totp-code">
                                     {!isLoading ? (
                                         <span
                                             className="code-text"
-                                            onClick={() => handleClipBoard(item.uid, item.otp)}
+                                            onClick={() => handleClipBoard(item.id, item.otp)}
                                             role="button"
                                             tabIndex={0}
                                         >
@@ -106,7 +106,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                         <p>Carregando</p>
                                     )}
 
-                                    {modalForUid === item.uid && (
+                                    {modalForUid === item.id && (
                                         <MinimalModal
                                             isShown={true}
                                             text="Código TOTP copiado para o clipboard."
@@ -124,7 +124,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                     <div className="progress-bar">
                                         <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                                     </div>
-                                    <EditButton canEdit={!showForm} onToggle={() => onToggleEdit(item.uid)} />
+                                    <EditButton canEdit={!showForm} onToggle={() => onToggleEdit(item.id)} />
                                 </div>
 
                                 <div className="refresh-info">

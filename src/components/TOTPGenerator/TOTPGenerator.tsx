@@ -32,15 +32,15 @@ const TOTPGeneratorContent: React.FC = () => {
     };
     const items = apiItems.map((item: TOTPItem) => {
         return {
-            uid: item.uid,
-            label: item.label ?? item.uid,
+            id: item.id,
+            label: item.label ?? item.id,
             otp: item.otp,
             timeRemaining,
             period: config.period,
             error: error?.toString(),
         };
     });
-    const selectedItem = apiItems.find((item: TOTPItem) => item.uid === selectedId);
+    const selectedItem = apiItems.find((item: TOTPItem) => item.id === selectedId);
 
     const handleConfigChange = (newConfig: TOTPConfig) => {
         setConfig(newConfig);
@@ -83,7 +83,8 @@ const TOTPGeneratorContent: React.FC = () => {
                         config={config}
                         onConfigChange={handleConfigChange}
                         selectedId={selectedId}
-                        selectedLabel={selectedItem?.label ?? selectedItem?.uid}
+                        key={selectedItem?.id}
+                        selectedLabel={selectedItem?.label ?? selectedItem?.id}
                     />
                 ) : (
                     <TOTPDisplay items={items} error={error} onToggleEdit={handleToggleEdit} isLoading={isLoading} />

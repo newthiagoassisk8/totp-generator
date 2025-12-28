@@ -27,7 +27,7 @@ export async function getTotp() {
 }
 export async function updateTotp(params: UpdateTotpParams) {
     try {
-        const response = await fetch(`${API_URL}/totp`, {
+        const response = await fetch(`${API_URL}/management/totp/${params.id}`, {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${BEARER_TOKEN}`,

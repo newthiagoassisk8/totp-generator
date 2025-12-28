@@ -1,5 +1,5 @@
 export type TOTPItem = {
-    uid: string;
+    id: string;
     label?: string;
     totp?: string;
     timeRemaining: number;
