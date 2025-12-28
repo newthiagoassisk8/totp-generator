@@ -1,11 +1,18 @@
 import { UpdateTotpParams } from '../hooks/useTotpFetching';
 
 const API_URL = import.meta.env.VITE_API_URL;
+const BEARER_TOKEN = import.meta.env.VITE_BEARER_TOKEN;
 
 export async function getTotp() {
     const baseUrl = `${API_URL}/totp`;
     try {
-        const res = await fetch(`${baseUrl}`);
+        const res = await fetch(`${baseUrl}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${BEARER_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
         if (!res.ok) {
             throw new Error(`Response status: ${res.status}`);
@@ -23,6 +30,7 @@ export async function updateTotp(params: UpdateTotpParams) {
         const response = await fetch(`${API_URL}/totp`, {
             method: 'PUT',
             headers: {
+                Authorization: `Bearer ${BEARER_TOKEN}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(params),
