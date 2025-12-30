@@ -95,7 +95,7 @@ const TOTPGeneratorContent: React.FC = () => {
 };
 const TOTPGenerator: React.FC = () => {
     return (
-        <TotpProvider secret="AAAAAAAA">
+        <TotpProvider secret="AAAAAAAA" >
             <TOTPGeneratorContent />
         </TotpProvider>
     );

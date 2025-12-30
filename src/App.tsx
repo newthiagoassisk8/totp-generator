@@ -1,5 +1,6 @@
 import './App.css';
 import TOTPGenerator from './components/TOTPGenerator/TOTPGenerator';
+import TOTPCreate from './components/TOTPGenerator/TOTPCreate';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Route, Routes } from 'react-router-dom';
@@ -18,6 +19,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<TOTPGenerator />} />
                         <Route path="/form" element={<TOTPGenerator />} />
+                        <Route path="/new" element={<TOTPCreate />} />
                     </Routes>
                 </main>
                 <footer className="app-footer">

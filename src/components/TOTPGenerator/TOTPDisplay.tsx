@@ -3,6 +3,7 @@ import './TOTPDisplay.css';
 import './button.css';
 import { MinimalModal } from './MinimalModal';
 import { TOTPItem } from '../../types/TOTPItem';
+import { AddButton } from './AddButton';
 
 import { useTotpContext } from '../../contexts/TotpContext';
 interface TOTPDisplayProps {
@@ -34,6 +35,7 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
 
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, isLoading }) => {
     const [modalForUid, setModalForUid] = useState<string | null>(null);
+    console.log(items)
 
     const { showForm } = useTotpContext();
     function handleClipBoard(uid: string, totp: string) {
@@ -56,11 +58,17 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
         return (
             <div className="totp-display">
                 <div className="display-container">
-                    <h2>TOTP gerado</h2>
+                    <div className="display-header">
+                        <h2>TOTP gerado</h2>
+                        <AddButton />
+                    </div>
                     <div className="totp-placeholder">
                         <p>Nenhum item para exibir</p>
                     </div>
-                    <EditButton canEdit={true} onToggle={onToggleEdit} />
+                    <div className="display-actions">
+                        <EditButton canEdit={true} onToggle={onToggleEdit} />
+                        <AddButton />
+                    </div>
                 </div>
             </div>
         );
@@ -69,13 +77,14 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
     return (
         <div className="totp-display">
             <div className="display-container">
-                <h2>TOTP gerado</h2>
+                <div className="display-header">
+                    <h2>TOTP gerado</h2>
+                </div>
 
                 {/* LISTA */}
                 <div className="totp-list">
                     {items.map((item) => {
                         const progressPercentage = ((item.period - item.timeRemaining) / item.period) * 100;
-
                         // tratamento opcional por item
                         if (item.error) {
                             return (
@@ -130,11 +139,13 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                 <div className="refresh-info">
                                     <p>O código é atualizado automaticamente a cada {item.period} segundos</p>
                                 </div>
+
                             </div>
                         );
                     })}
                 </div>
             </div>
+            <AddButton />
         </div>
     );
 };
