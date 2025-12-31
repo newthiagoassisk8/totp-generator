@@ -36,7 +36,7 @@ export interface UseTotpReturn {
  * currentTotp, now e expireDate é o retorno da requisição
  *
  */
-export function useTotp({ secret }: useTotpParams): UseTotpReturn {
+export function useTotp(): UseTotpReturn {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [currentTOTP, setCurrentTOTP] = useState('');
@@ -68,7 +68,7 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
         } finally {
             setIsLoading(false);
         }
-    }, [secret]);
+    }, []);
 
     const saveTotp = async (payload: { digits: number; label: string; id: string }) => {
         setError(null);
@@ -91,14 +91,12 @@ export function useTotp({ secret }: useTotpParams): UseTotpReturn {
      * Efeito para disparar a verificação automática (com debounce)
      */
     useEffect(() => {
-        if (secret) {
             const timer = setTimeout(() => {
                 fetchApi();
             }, 500);
 
             return () => clearTimeout(timer);
-        }
-    }, [secret, fetchApi]);
+    }, [fetchApi]);
 
     return {
         currentTOTP,
