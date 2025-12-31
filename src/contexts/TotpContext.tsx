@@ -7,8 +7,8 @@ type TotpProviderProps = useTotpParams & {
 
 const TotpContext = createContext<UseTotpReturn | null>(null);
 
-export function TotpProvider({ children, secret }: TotpProviderProps) {
-    const totp = useTotp({ secret });
+export function TotpProvider({ children }: TotpProviderProps) {
+    const totp = useTotp();
 
     return <TotpContext.Provider value={totp}>{children}</TotpContext.Provider>;
 }
