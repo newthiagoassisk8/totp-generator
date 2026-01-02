@@ -5,6 +5,7 @@ import { MinimalModal } from './MinimalModal';
 import { TOTPItem } from '../../types/TOTPItem';
 
 import { useTotpContext } from '../../contexts/TotpContext';
+import Loader from '../Loader/Loader';
 interface TOTPDisplayProps {
     items: TOTPItem[];
     onToggleEdit: (uid?: string) => void;
@@ -50,6 +51,9 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                 </div>
             </div>
         );
+    }
+    if (isLoading) {
+        return (<Loader size='lg' />)
     }
 
     if (!items || items.length === 0) {
