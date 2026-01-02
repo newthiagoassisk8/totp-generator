@@ -54,7 +54,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
         );
     }
     if (isLoading) {
-        return (<Loader size='lg' />)
+        return <Loader size="lg" />;
     }
 
     if (!items || items.length === 0) {

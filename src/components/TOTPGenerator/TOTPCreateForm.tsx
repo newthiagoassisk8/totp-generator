@@ -4,6 +4,8 @@ import './TOTPForm.css';
 import './button.css';
 import { InfoModal } from '../Modal/InfoModal';
 import { EditButton } from './TOTPDisplay';
+import { useTotpContext } from '../../contexts/TotpContext';
+import Loader from '../Loader/Loader';
 
 type CreateFormState = {
     issuer: string;
@@ -27,6 +29,8 @@ const TOTPCreateForm: React.FC = () => {
     const [formData, setFormData] = useState<CreateFormState>(initialState);
     const [modalMessage, setModalMessage] = useState<string | null>(null);
     const [modalError, setModalError] = useState<string | null>(null);
+
+    const { register, isLoading, error, isModalOpen } = useTotpContext();
     const navigate = useNavigate();
 
     const handleChange = (field: keyof CreateFormState, value: string | number) => {
@@ -34,16 +38,16 @@ const TOTPCreateForm: React.FC = () => {
             ...prev,
             [field]: value,
         }));
+        console.log(formData);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!formData.issuer.trim() || !formData.secret.trim()) {
             setModalError('Preencha o emissor e a chave secreta antes de cadastrar.');
             setModalMessage(null);
             return;
         }
-
-        setModalError(null);
+        await register({ label: formData.issuer, digits: formData.digits.toString(), secret: formData.secret });
         setModalMessage('Cadastro pronto. Clique em OK para voltar para a lista.');
     };
 
@@ -72,18 +76,6 @@ const TOTPCreateForm: React.FC = () => {
                             className="form-input"
                         />
                         <small className="form-help">Nome do serviço que gera o TOTP.</small>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="account">Conta</label>
-                        <input
-                            type="text"
-                            id="account"
-                            value={formData.account}
-                            onChange={(e) => handleChange('account', e.target.value)}
-                            placeholder="Ex: email@dominio.com"
-                            className="form-input"
-                        />
-                        <small className="form-help">Identificação da conta vinculada ao emissor.</small>
                     </div>
                 </div>
 
@@ -116,21 +108,20 @@ const TOTPCreateForm: React.FC = () => {
                     </div>
                 </div>
 
-
                 <div className="form-actions">
                     <EditButton canEdit={false} onToggle={() => navigate('/')} />
                     <button className="save-button" type="button" onClick={handleSubmit} title="Cadastrar">
-                        <span className="edit-label">Cadastrar</span>
+                        <span className="edit-label"> {isLoading ? <Loader size="sm" /> : 'Cadastrar'}</span>
                     </button>
                 </div>
             </form>
 
             <InfoModal
-                isOpen={Boolean(modalMessage || modalError)}
+                isOpen={isModalOpen}
                 title={modalError ? 'Ops' : 'Sucesso'}
                 message={modalMessage ?? ''}
                 onClose={closeModal}
-                error={modalError ?? ''}
+                error={error ?? ''}
             />
         </div>
     );

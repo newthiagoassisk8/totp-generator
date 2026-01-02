@@ -5,6 +5,7 @@ import './TOTPForm.css';
 import { EditButton } from './TOTPDisplay';
 import { InfoModal } from '../Modal/InfoModal';
 import { useTotpContext } from '../../contexts/TotpContext';
+import Loader from '../Loader/Loader';
 
 interface TOTPFormProps {
     config: TOTPConfig;
@@ -34,14 +35,6 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
         navigate('/');
     }
 
-    function Loader() {
-        return (
-            <svg className="loader" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-label="Carregando">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-                <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-        );
-    }
     function SaveButton() {
         const canSave = Boolean(selectedId);
         const label = labelValue ?? selectedId ?? 'Sem label';
@@ -56,7 +49,7 @@ const TOTPForm: React.FC<TOTPFormProps> = ({ config, onToggleEdit, onConfigChang
                 }}
                 disabled={!canSave}
             >
-                <span className="edit-label"> {isLoading ? <Loader /> : 'Salvar'}</span>
+                <span className="edit-label"> {isLoading ? <Loader size="sm" /> : 'Salvar'}</span>
             </button>
         );
     }

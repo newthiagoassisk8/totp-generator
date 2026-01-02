@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getTotp, updateTotp } from '../integrations/api';
+import { getTotp, registerTotp, updateTotp } from '../integrations/api';
 import { TOTPItem } from '../types/TOTPItem';
 
 export interface useTotpParams {
@@ -11,6 +11,13 @@ export interface UpdateTotpParams {
     label: string;
     digits: number;
 }
+export type RegisterTotpParams = useTotpParams & {
+    label: string;
+    digits: string;
+    encoding?: string;
+    period?: number;
+    algorithm?: string;
+};
 /**
  * Retorno do hook
  */
@@ -28,6 +35,7 @@ export interface UseTotpReturn {
     closeModal: () => void;
     items: TOTPItem[];
     needsRefresh: boolean | null;
+    register: (payload: RegisterTotpParams) => Promise<void>;
 }
 /**
  * currentTotp, now e expireDate precisa ser checado antes de exportar
@@ -70,6 +78,22 @@ export function useTotp(): UseTotpReturn {
         }
     }, []);
 
+    const registerService = async (payload: RegisterTotpParams) => {
+        setError(null);
+        setIsLoading(true);
+        try {
+            await registerTotp(payload);
+            await fetchApi();
+            setIsModalOpen(true);
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message ?? 'Erro ao salvar TOTP');
+            setIsModalOpen(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const saveTotp = async (payload: { digits: number; label: string; id: string }) => {
         setError(null);
         setIsLoading(true);
@@ -91,11 +115,11 @@ export function useTotp(): UseTotpReturn {
      * Efeito para disparar a verificação automática (com debounce)
      */
     useEffect(() => {
-            const timer = setTimeout(() => {
-                fetchApi();
-            }, 500);
+        const timer = setTimeout(() => {
+            fetchApi();
+        }, 500);
 
-            return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
     }, [fetchApi]);
 
     return {
@@ -112,5 +136,6 @@ export function useTotp(): UseTotpReturn {
         items,
         isModalOpen,
         needsRefresh,
+        register: registerService,
     };
 }
