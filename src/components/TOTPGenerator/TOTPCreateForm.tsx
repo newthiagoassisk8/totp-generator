@@ -114,33 +114,8 @@ const TOTPCreateForm: React.FC = () => {
                             <option value={8}>8 dígitos</option>
                         </select>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="period">Período (segundos)</label>
-                        <input
-                            type="number"
-                            id="period"
-                            min={10}
-                            value={formData.period}
-                            onChange={(e) => handleChange('period', parseInt(e.target.value, 10) || 0)}
-                            className="form-input"
-                        />
-                        <small className="form-help">Tempo de validade de cada código.</small>
-                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="algorithm">Algoritmo</label>
-                    <select
-                        id="algorithm"
-                        value={formData.algorithm}
-                        onChange={(e) => handleChange('algorithm', e.target.value as CreateFormState['algorithm'])}
-                        className="form-select"
-                    >
-                        <option value="sha1">SHA-1</option>
-                        <option value="sha256">SHA-256</option>
-                        <option value="sha512">SHA-512</option>
-                    </select>
-                </div>
 
                 <div className="form-actions">
                     <EditButton canEdit={false} onToggle={() => navigate('/')} />
@@ -160,5 +135,4 @@ const TOTPCreateForm: React.FC = () => {
         </div>
     );
 };
-
 export default TOTPCreateForm;
