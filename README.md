@@ -10,6 +10,10 @@ Este frontend possui uma API de backend dedicada disponível em: https://github.
 
 Este repositório de frontend é um fork do projeto original em https://github.com/Rani-Wehbe/totp-generator. O backend é um projeto novo e independente criado por `newthiagoassisk8`.
 
+## Referência em Vídeo
+
+Como funciona o TOP na prática | Projeto técnico: https://youtu.be/KkZsXKPP1R0
+
 ## Recursos
 
 - **Geração de TOTP em tempo real**: gera códigos TOTP que são atualizados automaticamente
