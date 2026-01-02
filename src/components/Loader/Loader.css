@@ -1,0 +1,81 @@
+.loader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+}
+
+.loader__spinner {
+    width: 28px;
+    height: 28px;
+    animation: loader-rotate 1.4s linear infinite;
+}
+
+.loader__track,
+.loader__indicator {
+    stroke-width: 4;
+}
+
+.loader__track {
+    stroke: var(--border-color);
+    opacity: 0.35;
+}
+
+.loader__indicator {
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-dasharray: 80 200;
+    stroke-dashoffset: 0;
+    animation: loader-dash 1.4s ease-in-out infinite;
+}
+
+.loader--sm .loader__spinner {
+    width: 20px;
+    height: 20px;
+}
+
+.loader--sm .loader__track,
+.loader--sm .loader__indicator {
+    stroke-width: 3;
+}
+
+.loader--lg .loader__spinner {
+    width: 40px;
+    height: 40px;
+}
+
+.loader--lg .loader__track,
+.loader--lg .loader__indicator {
+    stroke-width: 5;
+}
+
+@keyframes loader-rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loader-dash {
+    0% {
+        stroke-dasharray: 1 200;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90 200;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90 200;
+        stroke-dashoffset: -125;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loader__spinner {
+        animation: none;
+    }
+
+    .loader__indicator {
+        animation: none;
+    }
+}
