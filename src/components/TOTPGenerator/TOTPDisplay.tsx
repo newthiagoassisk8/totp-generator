@@ -35,7 +35,6 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
 
 const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, isLoading }) => {
     const [modalForUid, setModalForUid] = useState<string | null>(null);
-    console.log(items)
 
     const { showForm } = useTotpContext();
     function handleClipBoard(uid: string, totp: string) {
@@ -60,14 +59,12 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                 <div className="display-container">
                     <div className="display-header">
                         <h2>TOTP gerado</h2>
-                        <AddButton />
                     </div>
                     <div className="totp-placeholder">
                         <p>Nenhum item para exibir</p>
                     </div>
                     <div className="display-actions">
                         <EditButton canEdit={true} onToggle={onToggleEdit} />
-                        <AddButton />
                     </div>
                 </div>
             </div>
@@ -139,7 +136,6 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                 <div className="refresh-info">
                                     <p>O código é atualizado automaticamente a cada {item.period} segundos</p>
                                 </div>
-
                             </div>
                         );
                     })}
