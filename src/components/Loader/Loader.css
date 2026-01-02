@@ -1,4 +1,4 @@
-.loader {
+.app-loader {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -8,7 +8,6 @@
 .loader__spinner {
     width: 28px;
     height: 28px;
-    animation: loader-rotate 1.4s linear infinite;
 }
 
 .loader__track,
@@ -26,26 +25,28 @@
     stroke-linecap: round;
     stroke-dasharray: 80 200;
     stroke-dashoffset: 0;
-    animation: loader-dash 1.4s ease-in-out infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: loader-rotate 1.4s linear infinite, loader-dash 1.4s ease-in-out infinite;
 }
 
-.loader--sm .loader__spinner {
+.app-loader--sm .loader__spinner {
     width: 20px;
     height: 20px;
 }
 
-.loader--sm .loader__track,
-.loader--sm .loader__indicator {
+.app-loader--sm .loader__track,
+.app-loader--sm .loader__indicator {
     stroke-width: 3;
 }
 
-.loader--lg .loader__spinner {
+.app-loader--lg .loader__spinner {
     width: 40px;
     height: 40px;
 }
 
-.loader--lg .loader__track,
-.loader--lg .loader__indicator {
+.app-loader--lg .loader__track,
+.app-loader--lg .loader__indicator {
     stroke-width: 5;
 }
 
