@@ -30,6 +30,50 @@
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 20px var(--shadow-color);
 }
+
+.totp-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.totp-card-header h3 {
+    margin: 0;
+}
+
+.delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.delete-button svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.delete-button:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.6);
+    transform: translateY(-1px);
+}
+
+.delete-button:active {
+    transform: translateY(0);
+}
 .totp-code {
     margin: 32px 0;
     padding: 24px;

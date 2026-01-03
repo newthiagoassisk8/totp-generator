@@ -26,9 +26,7 @@ const TOTPGeneratorContent: React.FC = () => {
         if (uid) {
             setSelectedId(uid);
         }
-        navigate(isFormRoute ? '/' : '/form'
-
-        );
+        navigate(isFormRoute ? '/' : '/form');
     };
     const items = apiItems.map((item: TOTPItem) => {
         return {
@@ -95,7 +93,7 @@ const TOTPGeneratorContent: React.FC = () => {
 };
 const TOTPGenerator: React.FC = () => {
     return (
-        <TotpProvider >
+        <TotpProvider>
             <TOTPGeneratorContent />
         </TotpProvider>
     );

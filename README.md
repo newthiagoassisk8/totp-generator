@@ -18,10 +18,10 @@ Como funciona o TOP na prática | Projeto técnico: https://youtu.be/KkZsXKPP1R0
 
 - **Geração de TOTP em tempo real**: gera códigos TOTP que são atualizados automaticamente
 - **Parâmetros configuráveis**:
-  - Chave secreta (codificada em Base32)
-  - Número de dígitos (6 ou 8)
-  - Período de tempo (30 ou 60 segundos)
-  - Algoritmo de hash (SHA1, SHA256, SHA512)
+    - Chave secreta (codificada em Base32)
+    - Número de dígitos (6 ou 8)
+    - Período de tempo (30 ou 60 segundos)
+    - Algoritmo de hash (SHA1, SHA256, SHA512)
 - **Design responsivo**: funciona perfeitamente em desktop, tablet e dispositivos móveis
 - **UI moderna**: interface limpa e intuitiva com animações suaves
 - **TypeScript**: tipagem estática completa e melhor experiência de desenvolvimento
@@ -43,17 +43,20 @@ Como funciona o TOP na prática | Projeto técnico: https://youtu.be/KkZsXKPP1R0
 ### Instalação
 
 1. Clone o repositório:
+
 ```bash
 git clone <repository-url>
 cd totp-generator
 ```
 
 2. Instale as dependências:
+
 ```bash
 npm install
 ```
 
 3. Inicie o servidor de desenvolvimento:
+
 ```bash
 npm run dev
 ```
