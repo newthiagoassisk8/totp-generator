@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getTotp, updateTotp } from '../integrations/api';
+import { deleteTotp, getTotp, updateTotp } from '../integrations/api';
 import { TOTPItem } from '../types/TOTPItem';
 
 export interface useTotpParams {
@@ -25,6 +25,7 @@ export interface UseTotpReturn {
     isModalOpen: boolean;
     toggleShowForm: () => void;
     update: (payload: UpdateTotpParams) => Promise<void>;
+    delete: (id: string) => Promise<void>;
     closeModal: () => void;
     items: TOTPItem[];
     needsRefresh: boolean | null;
@@ -87,15 +88,29 @@ export function useTotp(): UseTotpReturn {
         }
     };
 
+    const deleteService = async (id: string) => {
+        setError(null);
+        setIsLoading(true);
+
+        try {
+            await deleteTotp(id);
+            await fetchApi();
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message ?? 'Erro ao salvar TOTP');
+        } finally {
+            setIsLoading(false);
+        }
+    };
     /**
      * Efeito para disparar a verificação automática (com debounce)
      */
     useEffect(() => {
-            const timer = setTimeout(() => {
-                fetchApi();
-            }, 500);
+        const timer = setTimeout(() => {
+            fetchApi();
+        }, 500);
 
-            return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
     }, [fetchApi]);
 
     return {
@@ -108,6 +123,7 @@ export function useTotp(): UseTotpReturn {
         showForm,
         toggleShowForm,
         update: saveTotp,
+        delete: deleteService,
         closeModal: () => setIsModalOpen(false),
         items,
         isModalOpen,

@@ -27,7 +27,9 @@
     stroke-dashoffset: 0;
     transform-origin: center;
     transform-box: fill-box;
-    animation: loader-rotate 1.4s linear infinite, loader-dash 1.4s ease-in-out infinite;
+    animation:
+        loader-rotate 1.4s linear infinite,
+        loader-dash 1.4s ease-in-out infinite;
 }
 
 .app-loader--sm .loader__spinner {
