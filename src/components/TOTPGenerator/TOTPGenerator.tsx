@@ -7,6 +7,7 @@ import TOTPForm from './TOTPForm';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TOTPItem } from '../../types/TOTPItem';
 import { TotpProvider, useTotpContext } from '../../contexts/TotpContext';
+import TOTPCreateForm from './TOTPCreateForm';
 
 const TOTPGeneratorContent: React.FC = () => {
     const { expiresDate, now, items: apiItems, reload, needsRefresh, error, isLoading } = useTotpContext();
@@ -18,15 +19,32 @@ const TOTPGeneratorContent: React.FC = () => {
         period: 30,
     });
     const [selectedId, setSelectedId] = useState<string | null>(null);
-
     const navigate = useNavigate();
     const location = useLocation();
-    const isFormRoute = location.pathname === '/form';
+    const routeView = (() => {
+        switch (location.pathname) {
+            case '/form':
+                return 'form';
+            case '/new':
+                return 'create';
+            case '/':
+            default:
+                return 'list';
+        }
+    })();
     const handleToggleEdit = (uid?: string) => {
         if (uid) {
             setSelectedId(uid);
         }
-        navigate(isFormRoute ? '/' : '/form');
+        switch (routeView) {
+            case 'form':
+            case 'create':
+                navigate('/');
+                break;
+            default:
+                navigate('/form');
+                break;
+        }
     };
     const items = apiItems.map((item: TOTPItem) => {
         return {
@@ -75,18 +93,32 @@ const TOTPGeneratorContent: React.FC = () => {
     return (
         <div className="totp-generator">
             <div className="generator-container">
-                {isFormRoute ? (
-                    <TOTPForm
-                        onToggleEdit={handleToggleEdit}
-                        config={config}
-                        onConfigChange={handleConfigChange}
-                        selectedId={selectedId}
-                        key={selectedItem?.id}
-                        selectedLabel={selectedItem?.label ?? selectedItem?.id}
-                    />
-                ) : (
-                    <TOTPDisplay items={items} error={error} onToggleEdit={handleToggleEdit} isLoading={isLoading} />
-                )}
+                {(() => {
+                    switch (routeView) {
+                        case 'form':
+                            return (
+                                <TOTPForm
+                                    onToggleEdit={handleToggleEdit}
+                                    config={config}
+                                    onConfigChange={handleConfigChange}
+                                    selectedId={selectedId}
+                                    key={selectedItem?.id}
+                                    selectedLabel={selectedItem?.label ?? selectedItem?.id}
+                                />
+                            );
+                        case 'create':
+                            return <TOTPCreateForm />;
+                        default:
+                            return (
+                                <TOTPDisplay
+                                    items={items}
+                                    error={error}
+                                    onToggleEdit={handleToggleEdit}
+                                    isLoading={isLoading}
+                                />
+                            );
+                    }
+                })()}
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import './TOTPDisplay.css';
 import './button.css';
 import { MinimalModal } from './MinimalModal';
 import { TOTPItem } from '../../types/TOTPItem';
+import { AddButton } from './AddButton';
 
 import { useTotpContext } from '../../contexts/TotpContext';
 import Loader from '../Loader/Loader';
@@ -86,11 +87,15 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
         return (
             <div className="totp-display">
                 <div className="display-container">
-                    <h2>TOTP gerado</h2>
+                    <div className="display-header">
+                        <h2>TOTP gerado</h2>
+                    </div>
                     <div className="totp-placeholder">
                         <p>Nenhum item para exibir</p>
                     </div>
-                    <EditButton canEdit={true} onToggle={onToggleEdit} />
+                    <div className="display-actions">
+                        <EditButton canEdit={true} onToggle={onToggleEdit} />
+                    </div>
                 </div>
             </div>
         );
@@ -99,13 +104,14 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
     return (
         <div className="totp-display">
             <div className="display-container">
-                <h2>TOTP gerado</h2>
+                <div className="display-header">
+                    <h2>TOTP gerado</h2>
+                </div>
 
                 {/* LISTA */}
                 <div className="totp-list">
                     {items.map((item) => {
                         const progressPercentage = ((item.period - item.timeRemaining) / item.period) * 100;
-
                         // tratamento opcional por item
                         if (item.error) {
                             return (
@@ -181,6 +187,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                     })}
                 </div>
             </div>
+            <AddButton />
         </div>
     );
 };

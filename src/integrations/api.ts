@@ -1,4 +1,4 @@
-import { UpdateTotpParams } from '../hooks/useTotpFetching';
+import { registerTotpParams, UpdateTotpParams } from '../hooks/useTotpFetching';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const BEARER_TOKEN = import.meta.env.VITE_BEARER_TOKEN;
@@ -46,6 +46,33 @@ export async function deleteTotp(id: string) {
     } catch (error) {
         console.error('Erro ao deletar TOTP:', error);
         throw error;
+    }
+}
+
+export async function registerTotp({
+    algorithm = 'SHA-256',
+    encoding = 'hex',
+    period = 30,
+    ...params
+}: registerTotpParams) {
+    try {
+        const response = await fetch(`${API_URL}/management/totp`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${BEARER_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (e) {
+        throw e;
     }
 }
 

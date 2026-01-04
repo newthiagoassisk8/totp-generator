@@ -18,6 +18,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<TOTPGenerator />} />
                         <Route path="/form" element={<TOTPGenerator />} />
+                        <Route path="/new" element={<TOTPGenerator />} />
                     </Routes>
                 </main>
                 <footer className="app-footer">
