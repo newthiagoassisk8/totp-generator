@@ -2,88 +2,88 @@ name: Deployment to GitHub Pages
 
 # Trigger on pushes to main and allow manual runs
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
 
 # Allow the action to push the gh-pages branch
 permissions:
-  contents: write
-  id-token: write
+    contents: write
+    id-token: write
 
 concurrency:
-  group: "github-pages-deploy"
-  cancel-in-progress: false
+    group: 'github-pages-deploy'
+    cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Build and deploy site
-    runs-on: ubuntu-latest
-    env:
-      NODE_VERSION: 18
+    deploy:
+        name: Build and deploy site
+        runs-on: ubuntu-latest
+        env:
+            NODE_VERSION: 18
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Build project
-        # Keep this generic: user repo should have a proper build script
-        run: npm run build
+            - name: Build project
+              # Keep this generic: user repo should have a proper build script
+              run: npm run build
 
-      - name: Detect publish directory (build or dist)
-        id: detect
-        run: |
-          # prefer dist (Vite) then build (CRA), then docs
-          if [ -d "./dist" ] && [ "$(ls -A ./dist)" ]; then
-            echo "PUBLISH_DIR=dist" >> $GITHUB_ENV
-            echo "Found dist/ — using dist as publish directory"
-          elif [ -d "./build" ] && [ "$(ls -A ./build)" ]; then
-            echo "PUBLISH_DIR=build" >> $GITHUB_ENV
-            echo "Found build/ — using build as publish directory"
-          elif [ -d "./docs" ] && [ "$(ls -A ./docs)" ]; then
-            echo "PUBLISH_DIR=docs" >> $GITHUB_ENV
-            echo "Found docs/ — using docs as publish directory"
-          else
-            echo "No publish directory found (expected ./dist, ./build or ./docs). Listing repo root for debugging:"
-            ls -la .
-            echo "::error::Publish directory not found or empty. Make sure npm run build produces dist/ or build/."
-            exit 1
-          fi
-          # Show the chosen directory to the job output
-          echo "Chosen publish dir: $PUBLISH_DIR"
+            - name: Detect publish directory (build or dist)
+              id: detect
+              run: |
+                  # prefer dist (Vite) then build (CRA), then docs
+                  if [ -d "./dist" ] && [ "$(ls -A ./dist)" ]; then
+                    echo "PUBLISH_DIR=dist" >> $GITHUB_ENV
+                    echo "Found dist/ — using dist as publish directory"
+                  elif [ -d "./build" ] && [ "$(ls -A ./build)" ]; then
+                    echo "PUBLISH_DIR=build" >> $GITHUB_ENV
+                    echo "Found build/ — using build as publish directory"
+                  elif [ -d "./docs" ] && [ "$(ls -A ./docs)" ]; then
+                    echo "PUBLISH_DIR=docs" >> $GITHUB_ENV
+                    echo "Found docs/ — using docs as publish directory"
+                  else
+                    echo "No publish directory found (expected ./dist, ./build or ./docs). Listing repo root for debugging:"
+                    ls -la .
+                    echo "::error::Publish directory not found or empty. Make sure npm run build produces dist/ or build/."
+                    exit 1
+                  fi
+                  # Show the chosen directory to the job output
+                  echo "Chosen publish dir: $PUBLISH_DIR"
 
-      - name: Show publish directory contents (for debugging)
-        if: always()
-        run: |
-          echo "PUBLISH_DIR = $PUBLISH_DIR"
-          echo "Contents:"
-          ls -la $PUBLISH_DIR || true
+            - name: Show publish directory contents (for debugging)
+              if: always()
+              run: |
+                  echo "PUBLISH_DIR = $PUBLISH_DIR"
+                  echo "Contents:"
+                  ls -la $PUBLISH_DIR || true
 
-      - name: Deploy to GitHub Pages (push to gh-pages)
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # use the directory we set dynamically
-          publish_dir: ${{ env.PUBLISH_DIR }}
-          # optional: name for the created commit
-          commit_message: "chore: deploy site from ${{ github.sha }}"
-          publish_branch: gh-pages
-          # set to true to allow empty commit if needed; we already check for non-empty so leave false
-          allow_empty_commit: false
+            - name: Deploy to GitHub Pages (push to gh-pages)
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  # use the directory we set dynamically
+                  publish_dir: ${{ env.PUBLISH_DIR }}
+                  # optional: name for the created commit
+                  commit_message: 'chore: deploy site from ${{ github.sha }}'
+                  publish_branch: gh-pages
+                  # set to true to allow empty commit if needed; we already check for non-empty so leave false
+                  allow_empty_commit: false
 
-      - name: Confirm deployment
-        if: success()
-        run: |
-          echo "Deployment step completed. If the Pages settings are set to serve from the gh-pages branch,"
-          echo "the site should be available shortly. You can confirm the gh-pages branch exists:"
-          git --no-recurse-submodules ls-remote --heads https://github.com/${{ github.repository }} gh-pages || true
+            - name: Confirm deployment
+              if: success()
+              run: |
+                  echo "Deployment step completed. If the Pages settings are set to serve from the gh-pages branch,"
+                  echo "the site should be available shortly. You can confirm the gh-pages branch exists:"
+                  git --no-recurse-submodules ls-remote --heads https://github.com/${{ github.repository }} gh-pages || true
