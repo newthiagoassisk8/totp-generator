@@ -30,7 +30,7 @@ const TOTPCreateForm: React.FC = () => {
     const [modalMessage, setModalMessage] = useState<string | null>(null);
     const [modalError, setModalError] = useState<string | null>(null);
 
-    const { register, isLoading, error, isModalOpen } = useTotpContext();
+    const { register, toggleModal, isLoading, error, isModalOpen } = useTotpContext();
     const navigate = useNavigate();
 
     const handleChange = (field: keyof CreateFormState, value: string | number) => {
@@ -54,7 +54,7 @@ const TOTPCreateForm: React.FC = () => {
     const closeModal = () => {
         setModalMessage(null);
         setModalError(null);
-
+        toggleModal();
         if (!modalError) {
             navigate('/');
         }

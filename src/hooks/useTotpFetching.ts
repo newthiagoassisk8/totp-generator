@@ -31,6 +31,7 @@ export interface UseTotpReturn {
     isLoading: boolean;
     isModalOpen: boolean;
     toggleShowForm: () => void;
+    toggleModal: () => void;
     update: (payload: UpdateTotpParams) => Promise<void>;
     delete: (id: string) => Promise<void>;
     closeModal: () => void;
@@ -61,6 +62,9 @@ export function useTotp(): UseTotpReturn {
         setShowForm((prev) => !prev);
     }
 
+    function toggleModal() {
+        setIsModalOpen((prev) => !prev);
+    }
     const fetchApi = useCallback(async (): Promise<void> => {
         setError(null);
         setNeedsRefresh(false);
@@ -121,7 +125,7 @@ export function useTotp(): UseTotpReturn {
             await fetchApi();
         } catch (err: any) {
             console.error(err);
-            setError(err.message ?? 'Erro ao salvar TOTP');
+            setError(err.message ?? 'Erro ao excluir serviço');
         } finally {
             setIsLoading(false);
         }
@@ -152,6 +156,7 @@ export function useTotp(): UseTotpReturn {
         items,
         isModalOpen,
         needsRefresh,
+        toggleModal,
         register: registerService,
     };
 }
