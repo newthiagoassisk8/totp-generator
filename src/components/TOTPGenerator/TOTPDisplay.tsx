@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import './TOTPDisplay.css';
 import './button.css';
 import { MinimalModal } from './MinimalModal';
@@ -7,6 +7,7 @@ import { AddButton } from './AddButton';
 
 import { useTotpContext } from '../../contexts/TotpContext';
 import Loader from '../Loader/Loader';
+import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
 interface TOTPDisplayProps {
     items: TOTPItem[];
     onToggleEdit: (uid?: string) => void;
@@ -34,10 +35,35 @@ export function EditButton({ canEdit, onToggle }: EditButtonProps) {
     );
 }
 
-const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, isLoading }) => {
-    const [modalForUid, setModalForUid] = useState<string | null>(null);
+type DeleteButtonProps = {
+    onDelete?: () => void;
+};
 
-    const { showForm } = useTotpContext();
+export function DeleteButton({ onDelete }: DeleteButtonProps) {
+    return (
+        <button className="delete-button" type="button" onClick={onDelete} aria-label="Excluir item" title="Excluir">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v9h-2V9zm4 0h2v9h-2V9zM7 9h2v9H7V9zm1 13h8a2 2 0 0 0 2-2V9h-2v11H8V9H6v11a2 2 0 0 0 2 2z" />
+            </svg>
+        </button>
+    );
+}
+
+const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, isLoading }) => {
+    const { delete: deleteHook, showForm } = useTotpContext();
+    const [modalForUid, setModalForUid] = useState<string | null>(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+    function handleDeleteClick() {
+        setIsConfirmOpen((prevState) => !prevState);
+    }
+    function handleCancel() {
+        setIsConfirmOpen(false);
+    }
+
+    async function handleConfirmation(id: string) {
+        await deleteHook(id);
+        setIsConfirmOpen(false);
+    }
     function handleClipBoard(uid: string, totp: string) {
         setModalForUid(uid);
         navigator.clipboard.writeText(totp);
@@ -90,7 +116,9 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                         if (item.error) {
                             return (
                                 <div key={item.id} className="totp-card">
-                                    <h3>{item.label ?? item.id}</h3>
+                                    <div className="totp-card-header">
+                                        <h3>{item.label ?? item.id}</h3>
+                                    </div>
                                     <div className="totp-placeholder">
                                         <p>{item.error}</p>
                                     </div>
@@ -100,7 +128,10 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
 
                         return (
                             <div key={item.id} className="totp-card">
-                                <h3>{item.label ?? item.id}</h3>
+                                <div className="totp-card-header">
+                                    <h3>{item.label ?? item.id}</h3>
+                                    <DeleteButton onDelete={handleDeleteClick} />
+                                </div>
 
                                 <div className="totp-code">
                                     {!isLoading ? (
@@ -134,6 +165,17 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                     <div className="progress-bar">
                                         <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
                                     </div>
+                                    {isConfirmOpen && (
+                                        <ConfirmModal
+                                            isOpen={isConfirmOpen}
+                                            isLoading={isLoading}
+                                            message={'Deseja confirmar a ação?'}
+                                            cancelText={'Cancelar'}
+                                            onConfirm={() => handleConfirmation(item.id)}
+                                            onCancel={handleCancel}
+                                            confirmText={'Confirmar'}
+                                        />
+                                    )}
                                     <EditButton canEdit={!showForm} onToggle={() => onToggleEdit(item.id)} />
                                 </div>
 

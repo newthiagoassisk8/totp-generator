@@ -25,6 +25,30 @@ export async function getTotp() {
         throw error;
     }
 }
+
+export async function deleteTotp(id: string) {
+    try {
+        const response = await fetch(`${API_URL}/management/totp`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${BEARER_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id }), // envia o ID no corpo
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erro ao deletar TOTP:', error);
+        throw error;
+    }
+}
+
 export async function registerTotp({
     algorithm = 'SHA-256',
     encoding = 'hex',
