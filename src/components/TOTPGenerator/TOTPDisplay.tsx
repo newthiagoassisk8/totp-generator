@@ -53,11 +53,9 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
     const [modalForUid, setModalForUid] = useState<string | null>(null);
     const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
     function handleDeleteClick() {
-        console.log('chego aqui?');
         setIsConfirmOpen((prevState) => !prevState);
-        console.log(isConfirmOpen);
     }
-    function handleCanel() {
+    function handleCancel() {
         setIsConfirmOpen(false);
     }
 
@@ -168,7 +166,7 @@ const TOTPDisplay: React.FC<TOTPDisplayProps> = ({ items, onToggleEdit, error, i
                                             message={'Deseja confirmar a ação?'}
                                             cancelText={'Cancelar'}
                                             onConfirm={() => handleConfirmation(item.id)}
-                                            onCancel={handleCanel}
+                                            onCancel={handleCancel}
                                             confirmText={'Confirmar'}
                                         />
                                     )}
